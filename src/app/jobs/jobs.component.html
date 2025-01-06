@@ -1,0 +1,42 @@
+<section id="jobs">
+    <div class="container">
+        <h5>RECENT JOB UPDATES</h5>
+
+        <div class="company-details" *ngFor="let job of jobs">
+            <div class="job-update">
+                <h4><strong>{{job.title}}</strong>
+                    <i class="fa fa-calendar bookmark">
+                        <p>
+                            {{job.createdDate | date }}</p>
+                    </i>
+                </h4>
+                <h6>{{job.company}}</h6>
+                <i class="fa fa-briefcase"></i><span>{{job.minExperience}} {{job.minExperience > 1 ? 'years' : 'year'
+                    }}</span><br>
+                <i class="fa fa-solid fa-users"></i><span>{{job.maxPosition}} {{job.maxPosition > 1 ? 'positions' :
+                    'position'}}</span><br>
+                <i class="fa fa-exclamation-circle"></i><span>{{job.applications.length}}
+                    {{job.applications.length > 1 ? 'applications' : 'application'}}</span><br>
+                <i class="fa fa-dollar"></i><span class="price"> {{job.minSalary | currency}} - {{job.maxSalary |
+                    currency}}</span><br>
+                <i class="fa fa-map-marker"></i><span class="location">{{job.location == null ? '' : job.location.city +
+                    ', ' + job.location.state}}</span>
+
+                <p><strong>Skills</strong> <i class="fa fa-angle-double-right"></i>
+                    <small *ngFor="let skill of job.skills">{{skill}}</small>
+                </p>
+                <p class="description"><strong>Description</strong> <i class="fa fa-angle-double-right"></i>
+                    {{job.description}}
+                </p>
+            </div>
+            <div class="apply-btn">
+                <button type="button" class="btn btn-primary" target="_blank">Apply</button>
+            </div>
+        </div>
+        <ul class="pagelink text-center">
+            <li class="right-arrow" (click)="previouse()">&#8592;</li>
+            <label>{{page}}/{{total_page}}</label>
+            <li class="right-arrow" (click)="next()">&#8594;</li>
+        </ul>
+    </div>
+</section>
