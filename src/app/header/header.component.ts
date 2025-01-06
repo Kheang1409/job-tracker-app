@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { AuthService } from '../auth.service';
 import { Router, RouterLink } from '@angular/router';
-import { jwtDecode } from 'jwt-decode';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,19 +12,15 @@ import { CommonModule } from '@angular/common';
 })
 export class HeaderComponent {
   title: string = environment.application.name;
-  username: string = ''
-
   home: string = environment.urlFrontend.home;
+  signIn: string = environment.urlFrontend.signIn;
 
   constructor(private _authService: AuthService, private _router: Router) {
   }
 
   ngOnInit(): void {
-    if (this._authService.getToken()) {
-      const token = `${this._authService.getToken()}`
-      const userPayload: any = jwtDecode(token);
-      this.username = userPayload.name;
-    }
+    console.log('hi');
+    console.log(`isExpiryToken(): ${this._authService.isExpiryToken()}`);
   }
 
   isLoggedIn(): boolean {
@@ -33,6 +28,6 @@ export class HeaderComponent {
   }
   logout() {
     this._authService.logout();
-    this._router.navigate([environment.urlFrontend.signIn]);
+    this._router.navigate([this.signIn]);
   }
 }

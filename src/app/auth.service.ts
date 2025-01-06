@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Token } from './token';
 import { environment } from '../environments/environment.development';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,18 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return localStorage.getItem(this.tokenKey) !== null;
+    return localStorage.getItem(this.tokenKey) !== null && !this.isExpiryToken();
+  }
+
+  isExpiryToken(): boolean {
+    var localToken = `${this.getToken()}`;
+    const userPayload: any = jwtDecode(localToken);
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (userPayload.exp < currentTime) {
+      this.clearToken();
+      return true;
+    }
+    return false;
   }
 
   logout() {
