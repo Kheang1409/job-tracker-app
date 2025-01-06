@@ -21,8 +21,11 @@ export class SignUpComponent {
   createFailMessage: string = '';
   isCreateFail: boolean = false;
 
+  home: string = environment.urlFrontend.home;
+
   constructor(private _formBuilder: FormBuilder, private _usersService: UsersDataService, private _authService: AuthService, private _router: Router) {
     this.user = new User();
+    this.redirectToHomePageIfLoggedIn();
   }
   ngOnInit(): void {
     this.userForm = this._formBuilder.group(
@@ -68,15 +71,10 @@ export class SignUpComponent {
           this.isCreateFail = true;
         },
         complete: () => {
-          this.redirectToHomePageIfLogged();
+          this.redirectToHomePageIfLoggedIn();
         }
       }
     )
-  }
-  redirectToHomePageIfLogged() {
-    if (this._authService.isLoggedIn()) {
-      this._router.navigate([environment.urlFrontend.home]);
-    }
   }
   isMissMatch() {
     if (this.userForm.value.password !== this.userForm.value.comfirmPassword) {
@@ -85,5 +83,10 @@ export class SignUpComponent {
       return true;
     }
     return false;
+  }
+  redirectToHomePageIfLoggedIn() {
+    if (this._authService.isLoggedIn()) {
+      this._router.navigate([this.home]);
+    }
   }
 }

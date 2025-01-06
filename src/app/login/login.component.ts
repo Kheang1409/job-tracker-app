@@ -22,9 +22,11 @@ export class LoginComponent implements OnInit {
   unauthorizedMessage: string = '';
   isUnauthorized: boolean = false;
 
+  home: string = environment.urlFrontend.home;
+
   constructor(private _formBuilder: FormBuilder, private _usersService: UsersDataService, private _authService: AuthService, private _router: Router) {
     this.user = new User();
-    this.redirectToHomePageIfLogged();
+    this.redirectToHomePageIfLoggedIn();
   }
 
   ngOnInit(): void {
@@ -53,15 +55,15 @@ export class LoginComponent implements OnInit {
           if (!this.isUnauthorized) {
             this.unauthorizedMessage = '';
             this.isUnauthorized = false;
-            this.redirectToHomePageIfLogged();
+            this.redirectToHomePageIfLoggedIn();
           }
         }
       }
     )
   }
-  redirectToHomePageIfLogged() {
+  redirectToHomePageIfLoggedIn() {
     if (this._authService.isLoggedIn()) {
-      this._router.navigate([environment.urlFrontend.home]);
+      this._router.navigate([this.home]);
     }
   }
 }
