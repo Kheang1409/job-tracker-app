@@ -427,6 +427,7 @@ h5 {
     box-shadow: 0 2px 70px 0 rgba(110, 130, 208, 0.18);
     border-radius: 5px;
     margin-bottom: 20px;
+    transition: all 0.3s ease-in-out;
 }
 
 .job-update {
@@ -454,26 +455,20 @@ h5 {
     color: red;
 }
 
-/* .description {
-    display: none;
-  }
-  .company-details :hover .description {
-    display: block;
-  }
-   */
-
-
 .description {
+    max-height: 0;
     overflow: hidden;
-    height: 0;
     opacity: 0;
-    transition: height 0ms 400ms, opacity 400ms 0ms;
+    transition: max-height 0.6s ease, opacity 0.6s ease;
 }
 
-.company-details :hover .description {
-    height: auto;
+.company-details:hover .description {
+    max-height: 200px;
     opacity: 1;
-    transition: height 0ms 0ms, opacity 600ms 0ms;
+}
+
+.company-details:hover {
+    transform: scale(1.05);
 }
 
 
@@ -511,9 +506,6 @@ h5 {
     cursor: pointer;
     color: rgb(33, 33, 226) !important;
 }
-
-
-
 
 .job-update small {
     background: #efefef;
