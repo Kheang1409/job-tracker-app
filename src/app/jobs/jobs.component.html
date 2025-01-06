@@ -30,10 +30,16 @@
                 </p>
             </div>
             <div class="apply-btn">
-                <button type="button" class="btn btn-primary" target="_blank">Apply</button>
+                <button type="button" class="btn btn-primary" (click)="apply(job.id)" target="_blank"
+                    [disabled]="job.isApplied">Apply</button>
+                <button *ngIf="job.userId == userId" type="button" class="btn btn-primary" (click)="apply(job.id)"
+                    target="_blank">Edit</button>
             </div>
+
+
+
         </div>
-        <ul class="pagelink text-center">
+        <ul class=" pagelink text-center" (keydown)="onKeydown($event)">
             <li class="right-arrow" (click)="previouse()">&#8592;</li>
             <label>{{page}}/{{total_page}}</label>
             <li class="right-arrow" (click)="next()">&#8594;</li>

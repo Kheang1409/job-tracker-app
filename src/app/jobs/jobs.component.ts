@@ -3,6 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { JobsDataService } from '../jobs-data.service';
 import { Job } from '../job';
 import { environment } from '../../environments/environment.development';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
+import { Application } from '../application';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-jobs',
@@ -17,7 +21,6 @@ export class JobsComponent implements OnInit {
 
   private pageNumberKey = 'pageNumber';
 
-
   page: number = 1;
   total_page!: number;
   jobs: Job[] = new Array<Job>();
@@ -27,19 +30,22 @@ export class JobsComponent implements OnInit {
   isError: boolean = false;
   errorMessage: string = ''
 
-  constructor(private _jobsService: JobsDataService) {
+  userId: string = '';
+
+  constructor(private _authService: AuthService, private _router: Router, private _jobsService: JobsDataService) {
     this.page = sessionStorage.getItem(this.pageNumberKey) == null ? 1 : Number(sessionStorage.getItem(this.pageNumberKey))
   }
 
-  getRestaurants(pageNumber: number): void {
-    this._jobsService.getRestaurants(pageNumber).subscribe(jobs => {
+  getJobs(pageNumber: number): void {
+    this._jobsService.getJobs(pageNumber).subscribe(jobs => {
       this.jobs = jobs;
       console.log(this.jobs)
     });
 
-    this._jobsService.getRestaurants(pageNumber).subscribe({
+    this._jobsService.getJobs(pageNumber).subscribe({
       next: (jobs) => {
         this.jobs = jobs;
+        this.checkIsApplied(jobs);
         this.isError = false;
       },
       error: (error) => {
@@ -56,12 +62,17 @@ export class JobsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTotalPage(this.searchQuery)
-    this.getRestaurants(this.page);
+    this.getJobs(this.page);
+    document.addEventListener('keydown', this.onKeydown.bind(this));
+  }
+
+  ngOnDestroy(): void {
+    document.removeEventListener('keydown', this.onKeydown.bind(this));
   }
 
   getTotalPage(name: string | null) {
-    this._jobsService.getTotalRestaurants(name).subscribe(restaurants => {
-      this.total_page = Math.ceil(restaurants / environment.numbers.limit);
+    this._jobsService.getTotalJobs(name).subscribe(jobs => {
+      this.total_page = Math.ceil(jobs / environment.numbers.limit);
       if (this.total_page < 1) {
         this.total_page = 1;
       }
@@ -73,7 +84,7 @@ export class JobsComponent implements OnInit {
       this.nextDisable = false;
       this.page--;
       this.setPageNumber(this.page);
-      this.getRestaurants(this.page);
+      this.getJobs(this.page);
     }
     else {
       this.previouseDisable = true;
@@ -87,12 +98,47 @@ export class JobsComponent implements OnInit {
     else {
       this.page++;
       this.setPageNumber(this.page);
-      this.getRestaurants(this.page);
+      this.getJobs(this.page);
       this.previouseDisable = false;
     }
   }
+
+
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'ArrowLeft') {
+      this.previouse();
+    } else if (event.key === 'ArrowRight') {
+      this.next();
+    }
+  }
+
   setPageNumber(page: number) {
     this.page = page;
     sessionStorage.setItem(this.pageNumberKey, `${page}`);
+  }
+  apply(jobId: string) {
+    if (!this._authService.isLoggedIn()) {
+      this._router.navigate([environment.urlFrontend.signIn]);
+    }
+    var job = this.jobs.filter(job => job.id == jobId)[0];
+    if (job) {
+      job = Object.assign(new Job(), job);
+      this._jobsService.applyJob(jobId).subscribe(application => {
+        job.newApplication(application);
+      });
+    }
+  }
+  checkIsApplied(jobs: Job[]) {
+    if (this._authService.getToken()) {
+      const token = `${this._authService.getToken()}`
+      const userPayload: any = jwtDecode(token);
+      this.userId = userPayload.sub;
+      for (let job of jobs) {
+        const found = job.applications.find(application => application.userId == this.userId)
+        if (found) {
+          job.isApplied = true;
+        }
+      }
+    }
   }
 }

@@ -1,8 +1,9 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Job } from './job';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../environments/environment.development';
+import { Application } from './application';
 
 
 @Injectable({
@@ -14,7 +15,7 @@ export class JobsDataService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  getRestaurants(pageNumber: number): Observable<Job[]> {
+  getJobs(pageNumber: number): Observable<Job[]> {
     let url: string = this._baseUrl
     url = `${url}?${environment.urlApi.query.pageNumber}=${pageNumber}`
     return this._httpClient.get<Job[]>(url).pipe(
@@ -22,7 +23,7 @@ export class JobsDataService {
     );
   }
 
-  getTotalRestaurants(name: string | null): Observable<number> {
+  getTotalJobs(name: string | null): Observable<number> {
     let url: string = `${this._baseUrl}/${environment.urlApi.total}`;
     if (name && name !== '') {
       url = `${url}?${environment.urlApi.query.name}=${name}`
@@ -32,8 +33,32 @@ export class JobsDataService {
     );
   }
 
+  applyJob(jobId: string): Observable<Application> {
+    let url: string = `${this._baseUrl}/${jobId}/${environment.urlApi.subsetUrl}`;
+    return this._httpClient.post<Application>(url, null).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
-    return throwError({ message: error.error.message });
+    if (error.status === 400 && error.error.errors) {
+      let userFriendlyErrors = [];
+
+      for (const field in error.error.errors) {
+        if (error.error.errors.hasOwnProperty(field)) {
+          const firstErrorMessage = error.error.errors[field][0];
+          userFriendlyErrors.push(`${field}: ${firstErrorMessage}`);
+        }
+      }
+
+      const errorMessage = userFriendlyErrors.join(' | ');
+      return throwError(() => new Error(errorMessage));
+    }
+    if (error.error.message) {
+      return throwError(() => new Error(error.error.message));
+    }
+    console.log(error.error);
+    return throwError(() => new Error('An unknown error occurred.'));
   }
 }
 
