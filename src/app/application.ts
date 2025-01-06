@@ -1,17 +1,19 @@
+import { NgForm } from "@angular/forms";
+
 export class Application {
-    #_id!: string;
-    #candidateId!: string;
+    #id!: string;
+    #userId!: string;
     #email!: string;
     #username!: string;
     #status!: string;
     #appliedDate!: Date;
     #notes!: string;
 
-    get _id(): string {
-        return this.#_id
+    get id(): string {
+        return this.#id
     }
-    get candidateId(): string {
-        return this.#candidateId
+    get userId(): string {
+        return this.#userId
     }
     get email(): string {
         return this.#email
@@ -29,11 +31,11 @@ export class Application {
         return this.#notes
     }
 
-    set _id(id: string) {
-        this.#_id = id;
+    set id(id: string) {
+        this.#id = id;
     }
-    set candidateId(candidateId: string) {
-        this.#candidateId = candidateId;
+    set userId(userId: string) {
+        this.#userId = userId;
     }
     set email(email: string) {
         this.#email = email;
@@ -49,5 +51,17 @@ export class Application {
     }
     set notes(notes: string) {
         this.#notes = notes;
+    }
+
+    jsonify() {
+        return {
+            id: this.#id,
+            userId: this.userId,
+            email: this.email,
+            username: this.username,
+            status: this.status,
+            appliedDate: this.appliedDate,
+            notes: this.notes
+        }
     }
 }

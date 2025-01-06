@@ -1,13 +1,13 @@
 import { FormGroup } from "@angular/forms";
 
 export class User {
-    #_id: string = ''
+    #id: string = ''
     #email: string = ''
     #username: string = ''
     #password: string = ''
 
-    get _id(): string {
-        return this.#_id;
+    get id(): string {
+        return this.#id;
     }
     get email(): string {
         return this.#email;

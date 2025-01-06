@@ -1,8 +1,9 @@
+import { NgForm } from "@angular/forms";
 import { Application } from "./application";
 import { Location } from "./location";
 
 export class Job {
-    #_id!: string;
+    #id!: string;
     #userId!: string;
     #title!: string;
     #company!: string;
@@ -16,9 +17,10 @@ export class Job {
     #applications!: Application[];
     #createdDate!: Date;
     #modifiedDate!: Date;
+    #isApplied!: boolean;
 
-    get _id(): string {
-        return this.#_id
+    get id(): string {
+        return this.#id
     }
     get userId(): string {
         return this.#userId
@@ -59,9 +61,12 @@ export class Job {
     get modifiedDate(): Date {
         return this.#modifiedDate
     }
+    get isApplied(): boolean {
+        return this.#isApplied;
+    }
 
-    set _id(id: string) {
-        this.#_id = id;
+    set id(id: string) {
+        this.#id = id;
     }
     set userId(userId: string) {
         this.#userId = userId;
@@ -95,5 +100,53 @@ export class Job {
     }
     set applications(applications: Application[]) {
         this.#applications = applications;
+    }
+    set createdDate(createdDate: Date) {
+        this.#createdDate = createdDate;
+    }
+    set modifiedDate(modifiedDate: Date) {
+        this.#modifiedDate = modifiedDate;
+    }
+
+    set isApplied(isApplied: boolean) {
+        this.#isApplied = isApplied;
+    }
+
+
+    fill(form: NgForm) {
+        this.id = form.value.id;
+        this.userId = form.value.userId;
+        this.title = form.value.title;
+        this.company = form.value.company;
+        this.maxPosition = form.value.maxPosition;
+        this.minExperience = form.value.minExperience;
+        this.minSalary = form.value.minSalary;
+        this.maxSalary = form.value.maxSalary;
+        this.skills = form.value.skills;
+        this.description = form.value.description;
+        this.location = form.value.location;
+    }
+
+    jsonify() {
+        return {
+            id: this.#id,
+            userId: this.userId,
+            title: this.title,
+            company: this.company,
+            maxPosition: this.maxPosition,
+            minExperience: this.minExperience,
+            minSalary: this.minSalary,
+            maxSalary: this.maxSalary,
+            skills: this.skills,
+            description: this.description,
+            location: this.location,
+            applications: this.applications,
+            createdDate: this.createdDate,
+            modifiedDate: this.modifiedDate
+        }
+    }
+
+    newApplication(application: Application) {
+        this.#applications.push(application);
     }
 }
