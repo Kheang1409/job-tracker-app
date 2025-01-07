@@ -17,7 +17,7 @@ export class Job {
     #applications!: Application[];
     #createdDate!: Date;
     #modifiedDate!: Date;
-    #isApplied!: boolean;
+    #status!: string;
 
     get id(): string {
         return this.#id
@@ -61,8 +61,8 @@ export class Job {
     get modifiedDate(): Date {
         return this.#modifiedDate
     }
-    get isApplied(): boolean {
-        return this.#isApplied;
+    get status(): string {
+        return this.#status;
     }
 
     set id(id: string) {
@@ -107,11 +107,9 @@ export class Job {
     set modifiedDate(modifiedDate: Date) {
         this.#modifiedDate = modifiedDate;
     }
-
-    set isApplied(isApplied: boolean) {
-        this.#isApplied = isApplied;
+    set status(status: string) {
+        this.#status = status;
     }
-
 
     fill(form: NgForm) {
         this.id = form.value.id;
@@ -144,6 +142,15 @@ export class Job {
             createdDate: this.createdDate,
             modifiedDate: this.modifiedDate
         }
+    }
+
+    isApplied(userId: string): boolean {
+        if (this.#applications.length == 0)
+            return false;
+        let found = this.applications.find(application => application.userId == userId)
+        if (found)
+            return true;
+        return false;
     }
 
     newApplication(application: Application) {
