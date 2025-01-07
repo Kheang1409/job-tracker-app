@@ -49,6 +49,17 @@ export class AuthService {
     return false;
   }
 
+  getUserId(): string {
+    var localToken = `${this.getToken()}`;
+    const userPayload: any = jwtDecode(localToken);
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (userPayload.exp < currentTime) {
+      this.clearToken();
+      return '';
+    }
+    return userPayload.sub;
+  }
+
   logout() {
     this.clearToken();
   }
