@@ -29,11 +29,13 @@
                     {{job.description}}
                 </p>
             </div>
-            <div class="apply-btn">
+            <div class="action-btn">
                 <button type="button" class="btn btn-primary" (click)="apply(job.id)" target="_blank"
-                    [disabled]="job.isApplied">Apply</button>
-                <button *ngIf="job.userId == userId" type="button" class="btn btn-primary" (click)="apply(job.id)"
+                    [disabled]="job.isApplied">{{job.isApplied ? 'Applied' : 'Apply'}}</button>
+                <button *ngIf="job.userId != userId" type="button" class="btn btn-secondary" (click)="apply(job.id)"
                     target="_blank">Edit</button>
+                <button *ngIf="job.userId != userId" type="button" class="btn btn-danger" (click)="apply(job.id)"
+                    target="_blank">Hiring Closed</button>
             </div>
         </div>
         <ul class=" pagelink text-center" (keydown)="onKeydown($event)">

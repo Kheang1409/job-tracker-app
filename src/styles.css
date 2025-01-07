@@ -7,18 +7,14 @@
 body,
 html {
     height: 100%;
-    background-color: rgb(233, 233, 250);
 }
 
 header {
-    /* background: #2d2d7f !important; */
     background-image: url("https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 100% 100%;
 }
-
-/* main-header start */
 
 [data-target="#mainMenu"] {
     position: relative;
@@ -30,7 +26,6 @@ header {
     letter-spacing: 1px;
     color: #fff;
     font-weight: 400;
-    /* position relative to its previous postion */
     position: relative;
     z-index: 1;
     text-decoration: none;
@@ -140,7 +135,6 @@ header {
 
     /**/
     .main-header .navbar-toggler .icon-bar {
-        background-color: #fff;
         margin: 0 auto 6px;
         border-radius: 0;
         width: 30px;
@@ -149,6 +143,7 @@ header {
         right: 0;
         -webkit-transition: all 0.2s ease;
         transition: all 0.2s ease;
+        background-color: #fff;
     }
 
     .main-header .navbar .navbar-toggler .icon-bar:first-child {
@@ -214,6 +209,10 @@ header {
 
     .dropdown-content {
         margin-left: 47%;
+    }
+
+    #form {
+        margin: -70vh auto !important;
     }
 }
 
@@ -323,16 +322,38 @@ header {
     border: 1px solid yellow;
 }
 
-/* top recuruiters */
-
 #technologies {
     padding-top: 50px;
     padding-bottom: 100px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 #technologies h3 {
-    text-align: center;
-    padding-bottom: 40px;
+    margin-bottom: 50px;
+}
+
+#technologies img {
+    max-width: 120px;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out, transition-delay 0.2s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    #technologies img {
+        max-width: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    #technologies img {
+        max-width: 50px;
+    }
 }
 
 h3::before {
@@ -345,11 +366,6 @@ h3::before {
     margin-top: -15px;
     border-top-left-radius: 70px;
     border-bottom-right-radius: 90px;
-}
-
-#technologies img {
-    max-width: 100px;
-    margin: 10px 20px;
 }
 
 .col-md-3 {
@@ -538,27 +554,58 @@ h5 {
     float: right;
 }
 
-.apply-btn {
+.action-btn {
     height: 40px;
     background-image: linear-gradient(to right, #6db9ef, #111136);
     padding: 5px;
     border-bottom-left-radius: 5px;
 }
 
-.apply-btn .btn-primary {
-    padding: 0 30px;
-    float: right;
-    box-shadow: none !important;
-    background: transparent;
+.action-btn .btn {
+    margin-left: 5px;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
     border: 1px solid #fff;
-    width: 100px;
     height: 30px;
     line-height: 30px;
-    background: #f36969;
+    padding: 0 30px;
+    float: right;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 12px;
     text-transform: uppercase;
     border-radius: 10px;
+    width: auto;
+    box-shadow: none !important;
+    background: transparent;
+    font-weight: bold;
+}
+
+.action-btn .btn:hover {
+    transform: scale(1.05);
+}
+
+.action-btn .btn-primary {
+    background-image: linear-gradient(to right, #6db9ef, #4a8d5c);
+}
+
+.action-btn .btn-primary:hover {
+    background-image: linear-gradient(to right, #218838, #1e7e34);
+}
+
+.action-btn .btn-secondary {
+    background-image: linear-gradient(to right, #f3e569, #f2c537);
+}
+
+.action-btn .btn-secondary:hover {
+    background-image: linear-gradient(to right, #e0a800, #d39e00);
+}
+
+.action-btn .btn-danger {
+    background-image: linear-gradient(to right, #f36969, #d94545);
+}
+
+.action-btn .btn-danger:hover {
+    background-image: linear-gradient(to right, #c82333, #a71d2a);
 }
 
 .pagelink li {
@@ -582,8 +629,6 @@ h5 {
 .right-arrow {
     color: #29b929;
 }
-
-/* site-stats */
 
 #site-stats {
     padding: 100px 0;
@@ -650,15 +695,15 @@ h5 {
 
 
 #form {
-    background-image: url("https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60");
     color: #fff;
     max-width: 400px;
-    margin: 100px auto;
+    margin: -30% auto;
     padding: 40px;
     border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     background-position: center;
     background-size: cover;
+    position: relative;
 }
 
 #form .heading {
