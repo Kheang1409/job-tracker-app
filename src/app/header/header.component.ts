@@ -19,8 +19,7 @@ export class HeaderComponent {
   }
 
   ngOnInit(): void {
-    console.log('hi');
-    console.log(`isExpiryToken(): ${this._authService.isExpiryToken()}`);
+
   }
 
   isLoggedIn(): boolean {
