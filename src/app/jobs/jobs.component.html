@@ -31,16 +31,18 @@
             </div>
             <div class="action-btn">
                 <button type="button" class="btn btn-primary" (click)="apply(job.id)" target="_blank"
-                    [disabled]="job.isApplied">{{job.isApplied ? 'Applied' : 'Apply'}}</button>
-                <button *ngIf="job.userId != userId" type="button" class="btn btn-secondary" (click)="apply(job.id)"
+                    [disabled]="job.isApplied(userId)">{{job.isApplied(userId) ? 'Applied' :
+                    'Apply'}}</button>
+                <button *ngIf="job.userId == userId" type="button" class="btn btn-secondary" (click)="editJob(job.id)"
                     target="_blank">Edit</button>
-                <button *ngIf="job.userId != userId" type="button" class="btn btn-danger" (click)="apply(job.id)"
-                    target="_blank">Hiring Closed</button>
+                <button *ngIf="job.userId == userId" type="button" class="btn btn-danger"
+                    (click)="updateJobStatus(job.id)" target="_blank">{{job.status == 'Inactive' ? 'Reopen' : 'Hiring
+                    Closed' }}</button>
             </div>
         </div>
         <ul class=" pagelink text-center" (keydown)="onKeydown($event)">
             <li class="right-arrow" (click)="previouse()">&#8592;</li>
-            <label>{{page}}/{{total_page}}</label>
+            <label>{{page}}/{{total_page ? total_page : '?'}}</label>
             <li class="right-arrow" (click)="next()">&#8594;</li>
         </ul>
     </div>

@@ -16,52 +16,31 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class JobsComponent implements OnInit {
 
-  previouseDisable: boolean = false;
-  nextDisable: boolean = false;
-
-  private pageNumberKey = 'pageNumber';
+  private pageNumberKey = environment.keys.pageNumberKey;
 
   page: number = 1;
   total_page!: number;
   jobs: Job[] = new Array<Job>();
 
-  searchQuery: string = '';
-
   isError: boolean = false;
   errorMessage: string = ''
 
   userId: string = '';
+  status: string = 'Active';
 
   constructor(private _authService: AuthService, private _router: Router, private _jobsService: JobsDataService) {
     this.page = sessionStorage.getItem(this.pageNumberKey) == null ? 1 : Number(sessionStorage.getItem(this.pageNumberKey))
   }
 
-  getJobs(pageNumber: number): void {
-    this._jobsService.getJobs(pageNumber).subscribe(jobs => {
-      this.jobs = jobs;
-      console.log(this.jobs)
-    });
 
-    this._jobsService.getJobs(pageNumber).subscribe({
-      next: (jobs) => {
-        this.jobs = jobs;
-        this.checkIsApplied(jobs);
-        this.isError = false;
-      },
-      error: (error) => {
-        this.isError = true;
-        this.errorMessage = error.message;
-        this.jobs = [];
-      },
-      complete: () => {
-        this.previouseDisable = false;
-        this.nextDisable = false;
-      }
-    });
-  }
 
   ngOnInit(): void {
-    this.getTotalPage(this.searchQuery)
+
+    if (this._authService.isLoggedIn()) {
+      this.userId = this._authService.getUserId()
+    }
+
+    this.getTotalPage(this.status)
     this.getJobs(this.page);
     document.addEventListener('keydown', this.onKeydown.bind(this));
   }
@@ -70,36 +49,98 @@ export class JobsComponent implements OnInit {
     document.removeEventListener('keydown', this.onKeydown.bind(this));
   }
 
-  getTotalPage(name: string | null) {
-    this._jobsService.getTotalJobs(name).subscribe(jobs => {
-      this.total_page = Math.ceil(jobs / environment.numbers.limit);
-      if (this.total_page < 1) {
-        this.total_page = 1;
+  getJobs(pageNumber: number): void {
+    this._jobsService.getJobs(pageNumber, this.status).subscribe({
+      next: (jobs) => {
+        this.jobs = jobs.map(_job => _job = Object.assign(new Job(), _job));
+        this.isError = false;
+        console.log(jobs);
+      },
+      error: (error) => {
+        this.isError = true;
+        this.errorMessage = error.message;
+        this.jobs = [];
+        console.log(error.message);
+      },
+      complete: () => {
       }
     });
   }
 
+  getTotalPage(status: string | null) {
+    this._jobsService.getTotalJobs(status).subscribe({
+      next: (jobs) => {
+        this.total_page = Math.ceil(jobs / environment.numbers.limit);
+        if (this.total_page < 1) {
+          this.total_page = 1;
+        }
+        console.log(`jobs: ${jobs}`);
+        console.log(`total_page: ${this.total_page}`);
+        this.isError = false;
+      },
+      error: (error) => {
+        this.isError = true;
+        this.errorMessage = error.message;
+        console.log(error.message);
+      },
+      complete: () => {
+
+      }
+    });
+  }
+
+  updateJobStatus(jobId: string) {
+    this.onAuthorized();
+    this._jobsService.updateJobStatus(jobId).subscribe({
+      next: (job) => {
+        console.log(job);
+        this.isError = false;
+      },
+      error: (error) => {
+        this.isError = true;
+        this.errorMessage = error.message;
+        console.log(error.message);
+      },
+      complete: () => {
+        this.getJobs(this.page);
+      }
+    });
+  }
+
+  apply(jobId: string) {
+    this.onAuthorized();
+    this._jobsService.applyJob(jobId).subscribe({
+      next: (application) => {
+        this.jobs.filter(_job => _job.id == jobId).map(_job => _job.newApplication(application));
+      },
+      error: (error) => {
+        this.isError = true;
+        this.errorMessage = error.message;
+        console.log(error.message);
+      },
+      complete: () => {
+
+      }
+    })
+  }
+
+  editJob(jobId: string) {
+
+  }
+
   previouse() {
     if (this.page > 1) {
-      this.nextDisable = false;
       this.page--;
       this.setPageNumber(this.page);
       this.getJobs(this.page);
     }
-    else {
-      this.previouseDisable = true;
-    }
   }
 
   next() {
-    if (this.page > this.total_page - 1) {
-      this.nextDisable = true;
-    }
-    else {
+    if (this.page <= this.total_page - 1) {
       this.page++;
       this.setPageNumber(this.page);
       this.getJobs(this.page);
-      this.previouseDisable = false;
     }
   }
 
@@ -116,29 +157,12 @@ export class JobsComponent implements OnInit {
     this.page = page;
     sessionStorage.setItem(this.pageNumberKey, `${page}`);
   }
-  apply(jobId: string) {
+
+  onAuthorized() {
     if (!this._authService.isLoggedIn()) {
       this._router.navigate([environment.urlFrontend.signIn]);
     }
-    var job = this.jobs.filter(job => job.id == jobId)[0];
-    if (job) {
-      job = Object.assign(new Job(), job);
-      this._jobsService.applyJob(jobId).subscribe(application => {
-        job.newApplication(application);
-      });
-    }
   }
-  checkIsApplied(jobs: Job[]) {
-    if (this._authService.getToken()) {
-      const token = `${this._authService.getToken()}`
-      const userPayload: any = jwtDecode(token);
-      this.userId = userPayload.sub;
-      for (let job of jobs) {
-        const found = job.applications.find(application => application.userId == this.userId)
-        if (found) {
-          job.isApplied = true;
-        }
-      }
-    }
-  }
+
+
 }
