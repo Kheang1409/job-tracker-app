@@ -11,23 +11,25 @@ import { Application } from './application';
 })
 export class JobsDataService {
 
-  private _baseUrl = 'http://localhost:5002/api/jobs';
+  private _baseUrl = environment.urlApi.baseJobUrl;
+  private queryPageNumber = environment.urlApi.query.pageNumber;
+  private queryStatus = environment.urlApi.query.status;
 
   constructor(private _httpClient: HttpClient) { }
 
-  getJobs(pageNumber: number): Observable<Job[]> {
+  getJobs(pageNumber: number, status: string | null): Observable<Job[]> {
     let url: string = this._baseUrl
-    url = `${url}?${environment.urlApi.query.pageNumber}=${pageNumber}`
+    url = `${url}?${this.queryPageNumber}=${pageNumber}`
+    if (status)
+      url = `${url}&${this.queryStatus}=${status}`
     return this._httpClient.get<Job[]>(url).pipe(
       catchError(this.handleError)
     );
   }
 
-  getTotalJobs(name: string | null): Observable<number> {
+  getTotalJobs(status: string | null): Observable<number> {
     let url: string = `${this._baseUrl}/${environment.urlApi.total}`;
-    if (name && name !== '') {
-      url = `${url}?${environment.urlApi.query.name}=${name}`
-    }
+    url = `${url}?${this.queryStatus}=${status}`
     return this._httpClient.get<number>(url).pipe(
       catchError(this.handleError)
     );
@@ -36,6 +38,13 @@ export class JobsDataService {
   applyJob(jobId: string): Observable<Application> {
     let url: string = `${this._baseUrl}/${jobId}/${environment.urlApi.subsetUrl}`;
     return this._httpClient.post<Application>(url, null).pipe(
+      catchError(this.handleError)
+    );
+  }
+  updateJobStatus(jobId: string): Observable<Job> {
+    let url: string = this._baseUrl
+    url = `${url}/${jobId}/${environment.urlApi.status}`
+    return this._httpClient.put<Job>(url, null).pipe(
       catchError(this.handleError)
     );
   }

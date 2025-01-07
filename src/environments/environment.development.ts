@@ -24,10 +24,11 @@ export const environment = {
         baseJobUrl: 'http://localhost:5002/api/jobs',
         subsetUrl: 'applications',
         total: 'totals',
+        status: 'status',
         applications: 'applications',
         query: {
             pageNumber: 'pageNumber',
-            name: 'name'
+            status: 'status'
         },
     },
     message: {
