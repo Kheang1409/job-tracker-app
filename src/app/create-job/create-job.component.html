@@ -3,8 +3,8 @@
 </div>
 
 <div class="form">
-    <h1 class="heading">Update Job Information</h1>
-    <form (ngSubmit)="update()" #jobForm="ngForm">
+    <h1 class="heading">Create Application!</h1>
+    <form (ngSubmit)="create()" #jobForm="ngForm">
         <div *ngIf="activeTab === 1">
             <div class="form-group">
                 <input type="text" class="inp_box" placeholder="Title" [(ngModel)]="job.title" name="title" required>

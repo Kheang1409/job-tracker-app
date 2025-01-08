@@ -14,6 +14,7 @@ export class HeaderComponent {
   title: string = environment.application.name;
   home: string = environment.urlFrontend.home;
   signIn: string = environment.urlFrontend.signIn;
+  createJob: string = environment.urlFrontend.createJob;
 
   constructor(private _authService: AuthService, private _router: Router) {
   }

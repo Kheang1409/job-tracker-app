@@ -145,12 +145,26 @@ export class Job {
     }
 
     isApplied(userId: string): boolean {
-        if (this.#applications.length == 0)
+        if (this.#applications == null || this.#applications.length == 0)
             return false;
         let found = this.applications.find(application => application.userId == userId)
         if (found)
             return true;
         return false;
+    }
+
+    totalApplications() {
+        if (this.#applications == null)
+            return 0;
+        else
+            return this.#applications.length;
+    }
+
+    getLocation() {
+        if (this.#location == null)
+            return 'N/A';
+
+        return `${this.#location.city ?? 'N/A'}, ${this.#location.state ?? 'N/A'}`
     }
 
     newApplication(application: Application) {

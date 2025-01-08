@@ -14,14 +14,17 @@ export class JobsDataService {
   private _baseUrl = environment.urlApi.baseJobUrl;
   private queryPageNumber = environment.urlApi.query.pageNumber;
   private queryStatus = environment.urlApi.query.status;
+  private querySort = environment.urlApi.query.sort;
 
   constructor(private _httpClient: HttpClient) { }
 
-  getJobs(pageNumber: number, status: string | null): Observable<Job[]> {
+  getJobs(pageNumber: number, status: string | null, sort: string | null): Observable<Job[]> {
     let url: string = this._baseUrl
     url = `${url}?${this.queryPageNumber}=${pageNumber}`
     if (status)
       url = `${url}&${this.queryStatus}=${status}`
+    if (sort)
+      url = `${url}&${this.querySort}=${sort}`
     return this._httpClient.get<Job[]>(url).pipe(
       catchError(this.handleError)
     );
@@ -31,6 +34,13 @@ export class JobsDataService {
     let url: string = this._baseUrl
     url = `${url}/${jobId}`
     return this._httpClient.get<Job>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  createJob(job: Job): Observable<Job> {
+    let url: string = `${this._baseUrl}`;
+    return this._httpClient.post<Job>(url, job.jsonify()).pipe(
       catchError(this.handleError)
     );
   }

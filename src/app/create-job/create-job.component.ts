@@ -1,62 +1,48 @@
 import { Component } from '@angular/core';
+import { environment } from '../../environments/environment.development';
+import { Job } from '../job';
 import { AuthService } from '../auth.service';
+import { JobsDataService } from '../jobs-data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../environments/environment.development';
 import { FormsModule } from '@angular/forms';
-import { Job } from '../job';
-import { JobsDataService } from '../jobs-data.service';
+import { Location } from '../location';
 
 @Component({
-  selector: 'app-edit-job',
+  selector: 'app-create-job',
   imports: [FormsModule, CommonModule],
-  templateUrl: './edit-job.component.html',
-  styleUrl: './edit-job.component.css'
+  templateUrl: './create-job.component.html',
+  styleUrl: './create-job.component.css'
 })
-export class EditJobComponent {
+export class CreateJobComponent {
 
   activeTab: number = 1;
 
   jobId!: string;
   job: Job = new Job();
-
+  location: Location = new Location();
+  skillsString: string = '';
   isError: boolean = false;
   errorMessage: string = ''
 
-  skillsString: string = ''
+
+  signIn: string = environment.urlFrontend.signIn;
+  home: string = environment.urlFrontend.home;
+  private pageNumberKey = environment.keys.pageNumberKey;
 
   constructor(private _authService: AuthService, private _jobsService: JobsDataService, private _router: Router, private _activatedRouter: ActivatedRoute) {
 
   }
   ngOnInit(): void {
     this.onAuthorized();
-    this.getJob();
+    this.job.location = this.location;
+    this.job.applications = [];
   }
 
-
-  getJob() {
-    this.jobId = this._activatedRouter.snapshot.params[environment.params.jobId];
-    this._jobsService.getJob(this.jobId).subscribe({
-      next: (job) => {
-        this.job = Object.assign(new Job(), job);
-        this.skills = this.job.skills
-        console.log(job)
-      },
-      error: (error) => {
-        this.isError = true;
-        this.errorMessage = error.message;
-        console.log(error.message);
-      },
-      complete: () => {
-
-      }
-    })
-  }
-
-  update(): void {
+  create(): void {
     this.onAuthorized();
-    this.job.skills = this.skills;
-    this._jobsService.updateJob(this.jobId, this.job).subscribe({
+    this.job.skills = this.skills
+    this._jobsService.createJob(this.job).subscribe({
       next: (job) => {
         console.log(job);
       },
@@ -66,7 +52,8 @@ export class EditJobComponent {
         console.log(error.message);
       },
       complete: () => {
-
+        this.setPageNumber(1);
+        this._router.navigate([this.home]);
       }
     });
   }
@@ -75,9 +62,6 @@ export class EditJobComponent {
     return this.skillsString.split(',').map(skill => skill.trim()).filter(skill => skill.length > 0);
   }
 
-  set skills(skills: string[]) {
-    this.skillsString = skills.join(', ');
-  }
 
   previouse() {
     this.activeTab--;
@@ -89,13 +73,17 @@ export class EditJobComponent {
     this.setActiveTab(this.activeTab);
   }
 
+  setPageNumber(page: number) {
+    sessionStorage.setItem(this.pageNumberKey, `${page}`);
+  }
+
   setActiveTab(activeTab: number) {
     this.activeTab = activeTab;
   }
 
   onAuthorized() {
     if (!this._authService.isLoggedIn()) {
-      this._router.navigate([environment.urlFrontend.signIn]);
+      this._router.navigate([this.signIn]);
     }
   }
 }

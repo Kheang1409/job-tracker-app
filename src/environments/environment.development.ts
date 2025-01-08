@@ -17,6 +17,7 @@ export const environment = {
         signIn: 'sign-in',
         signUp: 'sign-up',
         job: 'job',
+        createJob: 'create-job',
         editJob: 'edit-job',
         editJob_id: 'edit-job/:id',
         error: '**',
@@ -30,7 +31,8 @@ export const environment = {
         applications: 'applications',
         query: {
             pageNumber: 'pageNumber',
-            status: 'status'
+            status: 'status',
+            sort: 'sort',
         },
     },
     message: {
@@ -47,8 +49,7 @@ export const environment = {
     },
     keys: {
         tokenKey: 'authToken',
-        pageNumberKey: 'pageNumber',
-        activeTab: 'activeTab'
+        pageNumberKey: 'pageNumber'
     },
     forms: {
 
