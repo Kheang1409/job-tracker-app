@@ -4,11 +4,13 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 import { environment } from '../environments/environment.development';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { EditJobComponent } from './edit-job/edit-job.component';
 
 
 const home = environment.urlFrontend.home;
 const signIn = environment.urlFrontend.signIn;
 const signUp = environment.urlFrontend.signUp;
+const editJob_id = environment.urlFrontend.editJob_id;
 const error = environment.urlFrontend.error;
 
 export const routes: Routes = [
@@ -23,6 +25,9 @@ export const routes: Routes = [
     },
     {
         path: signUp, component: SignUpComponent
+    },
+    {
+        path: editJob_id, component: EditJobComponent
     },
     {
         path: error, component: ErrorPageComponent

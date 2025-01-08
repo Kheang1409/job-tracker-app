@@ -20,6 +20,7 @@ export class JobsComponent implements OnInit {
 
   page: number = 1;
   total_page!: number;
+  total_job!: number;
   jobs: Job[] = new Array<Job>();
 
   isError: boolean = false;
@@ -70,6 +71,7 @@ export class JobsComponent implements OnInit {
   getTotalPage(status: string | null) {
     this._jobsService.getTotalJobs(status).subscribe({
       next: (jobs) => {
+        this.total_job = jobs;
         this.total_page = Math.ceil(jobs / environment.numbers.limit);
         if (this.total_page < 1) {
           this.total_page = 1;
@@ -125,7 +127,9 @@ export class JobsComponent implements OnInit {
   }
 
   editJob(jobId: string) {
-
+    this.onAuthorized();
+    console.log(`${environment.urlFrontend.editJob}/${jobId}`);
+    this._router.navigate([`${environment.urlFrontend.editJob}/${jobId}`]);
   }
 
   previouse() {

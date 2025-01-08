@@ -210,10 +210,6 @@ header {
     .dropdown-content {
         margin-left: 47%;
     }
-
-    #form {
-        margin: -70vh auto !important;
-    }
 }
 
 /* Dropdown Content (Hidden by Default) */
@@ -694,10 +690,10 @@ h5 {
 }
 
 
-#form {
+.form {
     color: #fff;
     max-width: 400px;
-    margin: -30% auto;
+    margin: -60vh auto;
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
@@ -706,7 +702,7 @@ h5 {
     position: relative;
 }
 
-#form .heading {
+.form .heading {
     font-size: 30px;
     font-weight: 600;
     text-align: center;
@@ -714,7 +710,7 @@ h5 {
     text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
-#form .form-group {
+.form .form-group {
     margin-bottom: 20px;
 }
 
@@ -785,4 +781,130 @@ h5 {
 
 .login-link:hover {
     color: #6db9ef;
+}
+
+
+.tabs {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: 2px solid #ccc;
+}
+
+.tabs li {
+    padding: 12px 20px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px 4px 0 0;
+    background-color: #f1f1f1;
+    transition: background-color 0.3s ease;
+}
+
+.tabs li.active {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+.tabs li:hover {
+    background-color: #ddd;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.inp_box {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+textarea.inp_box {
+    height: 150px;
+    resize: none;
+}
+
+.error {
+    color: red;
+}
+
+button.btn2 {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.btn2:hover {
+    background-color: #45a049;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.button-container .btn2 {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.button-container .prev {
+    text-align: left;
+}
+
+.button-container .next {
+    text-align: right;
+}
+
+.button-container .submit {
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.btn2 {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.btn2:hover {
+    background-color: #0056b3;
+}
+
+.error {
+    color: red;
+    margin-top: 20px;
+}
+
+.required-asterisk {
+    color: red;
+    font-weight: bold;
+    margin-left: 5px;
+    /* Optional: space between input field and asterisk */
+}
+
+/* Optional: Add some space for inputs to prevent them from crowding the asterisk */
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }

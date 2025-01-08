@@ -5,6 +5,7 @@ export class Location {
     #city!: string;
     #state!: string;
     #country!: string;
+    #address!: string;
     #zip!: string;
 
     get id(): string {
@@ -18,6 +19,9 @@ export class Location {
     }
     get country(): string {
         return this.#country;
+    }
+    get address(): string {
+        return this.#address;
     }
     get zip(): string {
         return this.#zip;
@@ -35,12 +39,11 @@ export class Location {
     set country(country: string) {
         this.#country = country;
     }
+    set address(address: string) {
+        this.#address = address;
+    }
     set zip(zip: string) {
         this.#zip = zip;
-    }
-
-    constructor() {
-
     }
 
     fill(form: NgForm) {

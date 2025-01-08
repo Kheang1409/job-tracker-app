@@ -7,8 +7,7 @@ export const environment = {
 
     },
     params: {
-        restaurantId: 'id',
-        dishId: 'dishId',
+        jobId: 'id'
     },
     urlShared: {
         login: '/login',
@@ -17,6 +16,9 @@ export const environment = {
         home: 'home',
         signIn: 'sign-in',
         signUp: 'sign-up',
+        job: 'job',
+        editJob: 'edit-job',
+        editJob_id: 'edit-job/:id',
         error: '**',
     },
     urlApi: {
@@ -46,6 +48,7 @@ export const environment = {
     keys: {
         tokenKey: 'authToken',
         pageNumberKey: 'pageNumber',
+        activeTab: 'activeTab'
     },
     forms: {
 

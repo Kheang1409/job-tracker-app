@@ -27,6 +27,22 @@ export class JobsDataService {
     );
   }
 
+  getJob(jobId: string): Observable<Job> {
+    let url: string = this._baseUrl
+    url = `${url}/${jobId}`
+    return this._httpClient.get<Job>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateJob(jobId: string, updatedJob: Job): Observable<Job> {
+    let url: string = this._baseUrl
+    url = `${url}/${jobId}`
+    return this._httpClient.put<Job>(url, updatedJob.jsonify()).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getTotalJobs(status: string | null): Observable<number> {
     let url: string = `${this._baseUrl}/${environment.urlApi.total}`;
     url = `${url}?${this.queryStatus}=${status}`
