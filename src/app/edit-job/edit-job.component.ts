@@ -25,6 +25,8 @@ export class EditJobComponent {
 
   skillsString: string = ''
 
+  home: string = environment.urlFrontend.home;
+
   constructor(private _authService: AuthService, private _jobsService: JobsDataService, private _router: Router, private _activatedRouter: ActivatedRoute) {
 
   }
@@ -66,7 +68,7 @@ export class EditJobComponent {
         console.log(error.message);
       },
       complete: () => {
-
+        this._router.navigate([this.home]);
       }
     });
   }
