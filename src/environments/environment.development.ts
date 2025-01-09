@@ -17,6 +17,7 @@ export const environment = {
         signIn: 'sign-in',
         signUp: 'sign-up',
         job: 'job',
+        job_id: 'job/:id',
         createJob: 'create-job',
         editJob: 'edit-job',
         editJob_id: 'edit-job/:id',
@@ -28,7 +29,6 @@ export const environment = {
         subsetUrl: 'applications',
         total: 'totals',
         status: 'status',
-        applications: 'applications',
         query: {
             pageNumber: 'pageNumber',
             status: 'status',
