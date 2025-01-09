@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Job } from '../job';
+import { CustomPipe } from '../custom.pipe';
 
 @Component({
   selector: 'app-jobs',
-  imports: [CommonModule],
+  imports: [CommonModule, CustomPipe],
   templateUrl: './jobs.component.html',
   styleUrl: './jobs.component.css'
 })
@@ -16,6 +17,7 @@ export class JobsComponent {
   @Output() updateStatusEvent = new EventEmitter<string>();
   @Output() applyEvent = new EventEmitter<string>();
   @Output() editJobEvent = new EventEmitter<string>();
+  @Output() viewJobDetailEvent = new EventEmitter<string>();
 
   updateStatus(jobId: string) {
     this.updateStatusEvent.emit(jobId); // Emit jobId to parent
@@ -28,5 +30,7 @@ export class JobsComponent {
   editJob(jobId: string) {
     this.editJobEvent.emit(jobId); // Emit jobId to parent
   }
-
+  viewJob(jobId: string) {
+    this.viewJobDetailEvent.emit(jobId);
+  }
 }
