@@ -1,9 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Job } from './job';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../environments/environment.development';
 import { Application } from './application';
+import { StatusRemark } from './status';
 
 
 @Injectable({
@@ -12,9 +13,15 @@ import { Application } from './application';
 export class JobsDataService {
 
   private _baseUrl = environment.urlApi.baseJobUrl;
+  private _asubsetUrl = environment.urlApi.subsetUrl;
+
+  private _totalUrl = environment.urlApi.total;
+
+
   private queryPageNumber = environment.urlApi.query.pageNumber;
   private queryStatus = environment.urlApi.query.status;
   private querySort = environment.urlApi.query.sort;
+
 
   constructor(private _httpClient: HttpClient) { }
 
@@ -54,7 +61,7 @@ export class JobsDataService {
   }
 
   getTotalJobs(status: string | null): Observable<number> {
-    let url: string = `${this._baseUrl}/${environment.urlApi.total}`;
+    let url: string = `${this._baseUrl}/${this._totalUrl}`;
     url = `${url}?${this.queryStatus}=${status}`
     return this._httpClient.get<number>(url).pipe(
       catchError(this.handleError)
@@ -62,7 +69,8 @@ export class JobsDataService {
   }
 
   applyJob(jobId: string): Observable<Application> {
-    let url: string = `${this._baseUrl}/${jobId}/${environment.urlApi.subsetUrl}`;
+    let url: string = this._baseUrl;
+    url = `${url}/${jobId}/${this._asubsetUrl}`
     return this._httpClient.post<Application>(url, null).pipe(
       catchError(this.handleError)
     );
@@ -71,6 +79,15 @@ export class JobsDataService {
     let url: string = this._baseUrl
     url = `${url}/${jobId}/${environment.urlApi.status}`
     return this._httpClient.put<Job>(url, null).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateApplicantStatus(jobId: string, applicateId: string, status: StatusRemark): Observable<string> {
+    let url: string = this._baseUrl;
+    url = `${url}/${jobId}/${this._asubsetUrl}/${applicateId}`
+    return this._httpClient.patch<{ message: string }>(url, status.jsonify()).pipe(
+      map((response) => response.message),
       catchError(this.handleError)
     );
   }
