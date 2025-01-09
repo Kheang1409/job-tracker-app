@@ -435,17 +435,37 @@ h5 {
     padding: 50px 0;
 }
 
-.company-details {
+.company-details,
+.applicant-details {
     box-shadow: 0 2px 70px 0 rgba(110, 130, 208, 0.18);
     border-radius: 5px;
     margin-bottom: 20px;
     transition: all 0.3s ease-in-out;
+    text-decoration: none;
+}
+
+.applicant-details {
+    border-radius: 10px;
+}
+
+.applicant-details p {
+    padding: 0px 10px;
+}
+
+.job-details h3 {
+    background-image: url("https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60");
+    padding-bottom: 10px;
+    color: #fff;
 }
 
 .job-update {
     background: white;
     padding: 10px 20px;
     border-radius: 5px;
+}
+
+.job-update ul {
+    list-style-type: none;
 }
 
 .job-update h4 strong {
@@ -570,10 +590,10 @@ h5 {
     font-size: 12px;
     text-transform: uppercase;
     border-radius: 10px;
-    width: auto;
     box-shadow: none !important;
     background: transparent;
     font-weight: bold;
+    width: auto;
 }
 
 .action-btn .btn:hover {
@@ -907,4 +927,34 @@ button.btn2:hover {
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+
+.badge {
+    display: inline-block;
+    padding: 0.4em 0.7em;
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #fff;
+    border-radius: 0.25rem;
+}
+
+.badge-primary {
+    background-color: #007bff;
+}
+
+.badge-info {
+    background-color: #17a2b8;
+}
+
+.badge-success {
+    background-color: #28a745;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+}
+
+.badge-secondary {
+    background-color: #6c757d;
 }
