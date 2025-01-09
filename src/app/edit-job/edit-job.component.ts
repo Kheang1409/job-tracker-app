@@ -41,7 +41,7 @@ export class EditJobComponent {
     this._jobsService.getJob(this.jobId).subscribe({
       next: (job) => {
         this.job = Object.assign(new Job(), job);
-        this.skills = this.job.skills
+        this.skillsString = job.arraySkillsToString()
         console.log(job)
       },
       error: (error) => {
@@ -57,7 +57,7 @@ export class EditJobComponent {
 
   update(): void {
     this.onAuthorized();
-    this.job.skills = this.skills;
+    this.job.stringSkillsToArray(this.skillsString)
     this._jobsService.updateJob(this.jobId, this.job).subscribe({
       next: (job) => {
         console.log(job);
@@ -71,14 +71,6 @@ export class EditJobComponent {
         this._router.navigate([this.home]);
       }
     });
-  }
-
-  get skills(): string[] {
-    return this.skillsString.split(',').map(skill => skill.trim()).filter(skill => skill.length > 0);
-  }
-
-  set skills(skills: string[]) {
-    this.skillsString = skills.join(', ');
   }
 
   previouse() {
