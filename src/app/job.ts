@@ -170,4 +170,14 @@ export class Job {
     newApplication(application: Application) {
         this.#applications.push(application);
     }
+
+    stringSkillsToArray(skillsString: string) {
+        this.skills = skillsString.split(',').map(skill => skill.trim()).filter(skill => skill.length > 0);
+    }
+
+    arraySkillsToString(): string {
+        if (this.skills)
+            return this.skills.join(', ');
+        return '';
+    }
 }
