@@ -19,6 +19,7 @@ export class RecentJobComponent implements OnInit {
 
   private pageNumberKey = environment.keys.pageNumberKey;
   editJobUrl: string = environment.urlFrontend.editJob;
+  jobUrl: string = environment.urlFrontend.job;
 
   page: number = 1;
   total_page!: number;
@@ -138,6 +139,10 @@ export class RecentJobComponent implements OnInit {
     this._router.navigate([`${this.editJobUrl}/${jobId}`]);
   }
 
+  viewJobDetail(jobId: string) {
+    this._router.navigate([`${this.jobUrl}/${jobId}`]);
+  }
+
   previouse() {
     if (this.page > 1) {
       this.page--;
@@ -183,5 +188,9 @@ export class RecentJobComponent implements OnInit {
 
   onEditJob(jobId: string) {
     this.editJob(jobId);
+  }
+
+  onViewJobDetail(jobId: string) {
+    this.viewJobDetail(jobId);
   }
 }

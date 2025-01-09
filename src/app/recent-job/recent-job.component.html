@@ -2,8 +2,9 @@
     <div class="container">
         <h5>RECENT JOB UPDATES ({{total_job}})</h5>
 
-        <app-jobs [userId]="userId" [jobs]="jobs" (updateStatusEvent)="onUpdateJobStatus($event)"
-            (applyEvent)="onApplyJob($event)" (editJobEvent)="onEditJob($event)">
+        <app-jobs [userId]="userId" [jobs]="jobs" (viewJobDetailEvent)="onViewJobDetail($event)"
+            (updateStatusEvent)="onUpdateJobStatus($event)" (applyEvent)="onApplyJob($event)"
+            (editJobEvent)="onEditJob($event)">
         </app-jobs>
 
         <ul class=" pagelink text-center" (keydown)="onKeydown($event)">
