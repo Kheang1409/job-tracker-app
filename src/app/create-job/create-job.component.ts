@@ -41,7 +41,7 @@ export class CreateJobComponent {
 
   create(): void {
     this.onAuthorized();
-    this.job.skills = this.skills
+    this.job.stringSkillsToArray(this.skillsString);
     this._jobsService.createJob(this.job).subscribe({
       next: (job) => {
         console.log(job);
@@ -57,11 +57,6 @@ export class CreateJobComponent {
       }
     });
   }
-
-  get skills(): string[] {
-    return this.skillsString.split(',').map(skill => skill.trim()).filter(skill => skill.length > 0);
-  }
-
 
   previouse() {
     this.activeTab--;
