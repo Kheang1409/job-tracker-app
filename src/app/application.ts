@@ -7,6 +7,7 @@ export class Application {
     #username!: string;
     #status!: string;
     #appliedDate!: Date;
+    #interviewDate!: Date;
     #notes!: string;
 
     get id(): string {
@@ -26,6 +27,9 @@ export class Application {
     }
     get appliedDate(): Date {
         return this.#appliedDate
+    }
+    get interviewDate(): Date {
+        return this.#interviewDate;
     }
     get notes(): string {
         return this.#notes
@@ -48,6 +52,9 @@ export class Application {
     }
     set appliedDate(appliedDate: Date) {
         this.#appliedDate = appliedDate;
+    }
+    set interviewDate(interviewDate: Date) {
+        this.#interviewDate = interviewDate;
     }
     set notes(notes: string) {
         this.#notes = notes;
