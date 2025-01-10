@@ -6,10 +6,11 @@ import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environment.development';
+import { BannerComponent } from '../banner/banner.component';
 
 @Component({
   selector: 'app-sign-up',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, BannerComponent],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.css'
 })

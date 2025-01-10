@@ -8,5 +8,9 @@ import { Component, Input } from '@angular/core';
   styleUrl: './banner.component.css'
 })
 export class BannerComponent {
-  @Input() isEmpty!: boolean
+  @Input() isEmpty!: boolean;
+  @Input() title!: string;
+  @Input() description!: string;
+
+
 }

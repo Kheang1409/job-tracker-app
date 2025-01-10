@@ -7,6 +7,8 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { EditJobComponent } from './edit-job/edit-job.component';
 import { CreateJobComponent } from './create-job/create-job.component';
 import { JobComponent } from './job/job.component';
+import { AboutComponent } from './about/about.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
 
 
 const home = environment.urlFrontend.home;
@@ -15,6 +17,8 @@ const signUp = environment.urlFrontend.signUp;
 const job_id = environment.urlFrontend.job_id;
 const editJob_id = environment.urlFrontend.editJob_id;
 const createJob = environment.urlFrontend.createJob;
+const about = environment.urlFrontend.about;
+const contact = environment.urlFrontend.contact;
 const error = environment.urlFrontend.error;
 
 export const routes: Routes = [
@@ -38,6 +42,12 @@ export const routes: Routes = [
     },
     {
         path: editJob_id, component: EditJobComponent
+    },
+    {
+        path: about, component: AboutComponent
+    },
+    {
+        path: contact, component: ContactUsComponent
     },
     {
         path: error, component: ErrorPageComponent

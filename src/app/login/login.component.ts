@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { User } from '../user';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environment.development';
+import { BannerComponent } from '../banner/banner.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, BannerComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

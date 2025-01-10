@@ -6,10 +6,11 @@ import { environment } from '../../environments/environment.development';
 import { FormsModule } from '@angular/forms';
 import { Job } from '../job';
 import { JobsDataService } from '../jobs-data.service';
+import { BannerComponent } from '../banner/banner.component';
 
 @Component({
   selector: 'app-edit-job',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, BannerComponent],
   templateUrl: './edit-job.component.html',
   styleUrl: './edit-job.component.css'
 })

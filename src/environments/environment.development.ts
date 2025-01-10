@@ -21,6 +21,8 @@ export const environment = {
         createJob: 'create-job',
         editJob: 'edit-job',
         editJob_id: 'edit-job/:id',
+        about: 'about',
+        contact: 'contact',
         error: '**',
     },
     urlApi: {

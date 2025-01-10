@@ -7,10 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Location } from '../location';
+import { BannerComponent } from '../banner/banner.component';
 
 @Component({
   selector: 'app-create-job',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, BannerComponent],
   templateUrl: './create-job.component.html',
   styleUrl: './create-job.component.css'
 })
