@@ -41,7 +41,7 @@ export class EditJobComponent {
     this._jobsService.getJob(this.jobId).subscribe({
       next: (job) => {
         this.job = Object.assign(new Job(), job);
-        this.skillsString = job.arraySkillsToString()
+        this.skillsString = this.job.arraySkillsToString();
         console.log(job)
       },
       error: (error) => {
@@ -50,7 +50,6 @@ export class EditJobComponent {
         console.log(error.message);
       },
       complete: () => {
-
       }
     })
   }
