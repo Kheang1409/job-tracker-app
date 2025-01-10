@@ -1,0 +1,49 @@
+<header class="main-header">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg main-nav px-0">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu"
+                aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="icon-bar icon-bar-1"></span>
+                <span class="icon-bar icon-bar-2"></span>
+                <span class="icon-bar icon-bar-3"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainMenu">
+                <ul class="navbar-nav text-uppercase f1">
+                    <li>
+                        <a href="/" class=" active-first">Home</a>
+                    </li>
+                    <li>
+                        <a href="/about">About us</a>
+                    </li>
+                    <!-- <li>
+                        <a href="/allJobs ">All Jobs</a>
+                    </li> -->
+                    <li>
+                        <a href="/contact">Contact us</a>
+                    </li>
+                </ul>
+                <div class="nav-item dropdown ml-auto" *ngIf="isLoggedIn()">
+                    <a class="dropdown-toggle dropbtn" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/fox.jpg"
+                            width="40" height="40" class="rounded-circle">
+                    </a>
+                    <div class="dropdown-menu dropdown-content" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{{createJob}}">Create Job</a>
+                        <a class="dropdown-item" href="" (click)="logout()">Log Out</a>
+                    </div>
+                </div>
+                <div class="nav-item ml-auto" *ngIf="!isLoggedIn()">
+                    <ul class="navbar-nav text-uppercase f1">
+                        <li>
+                            <a routerLink="/sign-in">Login</a>
+                        </li>
+                        <li>
+                            <a routerLink="/sign-up">Sign Up</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>

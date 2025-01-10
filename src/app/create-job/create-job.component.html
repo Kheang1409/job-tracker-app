@@ -1,0 +1,75 @@
+<app-banner [isEmpty]="true"></app-banner>
+
+<div class="form">
+    <h1 class="heading">Create Application!</h1>
+    <form (ngSubmit)="create()" #jobForm="ngForm">
+        <div *ngIf="activeTab === 1">
+            <div class="form-group">
+                <input type="text" class="inp_box" placeholder="Title" [(ngModel)]="job.title" name="title" required>
+                <span class="required-asterisk">*</span>
+            </div>
+            <div class="form-group">
+                <input type="text" class="inp_box" placeholder="Company" [(ngModel)]="job.company" name="company"
+                    required>
+                <span class="required-asterisk">*</span>
+            </div>
+            <div class="form-group">
+                <input type="number" class="inp_box" placeholder="Available Positions" [(ngModel)]="job.maxPosition"
+                    name="maxPosition" value="1" min="1" required>
+                <span class="required-asterisk">*</span>
+            </div>
+            <div class="form-group">
+                <input type="number" class="inp_box" placeholder="Min Salary" [(ngModel)]="job.minSalary"
+                    name="minSalary" value="0" min="0" required>
+                <span class="required-asterisk">*</span>
+            </div>
+            <div class="form-group">
+                <input type="number" class="inp_box" placeholder="Max Salary" [(ngModel)]="job.maxSalary"
+                    name="maxSalary" value="0" min="0">
+                <span class="required-asterisk">*</span>
+            </div>
+            <div class="button-container">
+                <button type="button" class="btn2" (click)="next()">Next</button>
+            </div>
+        </div>
+
+        <div *ngIf="activeTab === 2">
+            <div class="form-group">
+                <input type="text" class="inp_box" placeholder="Country" [(ngModel)]="job.location.country"
+                    name="country">
+            </div>
+            <div class="form-group">
+                <input type="text" class="inp_box" placeholder="State" [(ngModel)]="job.location.state" name="state">
+            </div>
+            <div class="form-group">
+                <input type="text" class="inp_box" placeholder="City" [(ngModel)]="job.location.city" name="city">
+            </div>
+            <div class="form-group">
+                <input type="text" class="inp_box" placeholder="Address" [(ngModel)]="job.location.address"
+                    name="address">
+            </div>
+            <div class="form-group">
+                <input type="number" class="inp_box" placeholder="Zip Code" [(ngModel)]="job.location.zip" name="zip">
+            </div>
+            <div class="button-container">
+                <button type="button" class="btn2 prev" (click)="previouse()">Previous</button>
+                <button type="button" class="btn2 next" (click)="next()">Next</button>
+            </div>
+        </div>
+
+        <div *ngIf="activeTab === 3">
+            <div class="form-group">
+                <input type="text" class="inp_box" placeholder="Skills" [(ngModel)]="skillsString" name="skills">
+            </div>
+            <div class="form-group">
+                <textarea class="inp_box" placeholder="Job Description" [(ngModel)]="job.description"
+                    name="description"></textarea>
+            </div>
+            <div class="button-container">
+                <button type="button" class="btn2 prev" (click)="previouse()">Previous</button>
+                <button type="submit" class="btn2 submit">Submit</button>
+            </div>
+        </div>
+        <h4 class="error" *ngIf="isError">{{errorMessage}}</h4>
+    </form>
+</div>

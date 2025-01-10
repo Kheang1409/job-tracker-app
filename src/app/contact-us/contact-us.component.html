@@ -1,0 +1,23 @@
+<!-- Contact Us Page Component -->
+
+<app-banner [isEmpty]="true" [title]="title" [description]="description"></app-banner>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Get in Touch</h2>
+            <p>We’re always happy to hear from you! Whether you have questions or just want to connect, you can
+                reach us via the contact details below, or send us a message using the form.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 contact-item">
+            <h4>Email Us</h4>
+            <p><a href="mailto:{{contact.email}}">{{contact.email}}</a></p>
+        </div>
+        <div class="col-md-6 contact-item">
+            <h4>Call Us</h4>
+            <p><a href="tel:{{contact.phoneNumber}}">{{contact.phoneNumber}}</a></p>
+        </div>
+    </div>
+</div>

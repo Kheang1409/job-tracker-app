@@ -1,0 +1,58 @@
+<div class="job-details" *ngIf="job != null">
+    <div class="text-center"></div>
+    <h3>{{ job.title }}</h3>
+    <h5>{{ job.company }}</h5>
+
+    <div class="job-update">
+        <p><strong>Experience Required:</strong> {{ job.minExperience }}+ years</p>
+        <p><strong>Position:</strong> {{ job.maxPosition }}</p>
+        <p><strong>Skills:</strong> {{ job.arraySkillsToString() }}</p>
+        <p><strong>Location:</strong> {{ job.getLocation() }}</p>
+        <p><strong>Status:</strong> {{ job.status }}</p>
+        <p><strong>Description:</strong> {{ job.description }}</p>
+
+        <p>
+            <strong>Salary Range:</strong>
+            ${{ job.minSalary | custom }} - ${{ job.maxSalary | custom }}
+        </p>
+    </div>
+    <div class="action-btn">
+        <button type="button" class="btn btn-primary" (click)="apply()" target="_blank"
+            [disabled]="job.isApplied(userId)">{{job.isApplied(userId) ? 'Applied' :
+            'Apply'}}</button>
+        <button *ngIf="isTheOwner()" type="button" class="btn btn-secondary" (click)="editJob()"
+            target="_blank">Edit</button>
+        <button *ngIf="isTheOwner()" type="button" class="btn btn-danger" (click)="updateJobStatus()"
+            target="_blank">{{job.status == 'Inactive' ? 'Reopen' : 'Hiring' }}</button>
+    </div>
+
+    <div *ngIf="isTheOwner()" class="applicant-update">
+        <h4>Applications: ({{job.totalApplications()}})</h4>
+        <ul>
+            <li *ngFor="let application of job.applications" class="applicant-details">
+                <p><strong>Applicant:</strong> {{ application.username }}</p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="badge" [ngClass]="getBadgeClass(application.status)">
+                        {{ application.status }}
+                    </span>
+                </p>
+                <p><strong>Email:</strong> <a href="mailto:{{ application.email }}">{{
+                        application.email }}</a></p>
+                <p><strong>Applied on:</strong> {{ application.appliedDate | date: 'short' : 'UTC' }}</p>
+                <p *ngIf="application.status == 'Interview'">
+                    <strong>Interview on:</strong> {{ application.interviewDate | date: 'short' : 'UTC' }}
+                </p>
+                <div class="action-btn" *ngIf="isActionDisable(application.status)">
+                    <button class="btn btn-primary" (click)="action(application.id)">Action</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div *ngIf="isModalVisible">
+    <app-schedule-interview-modal [jobId]="jobId" [applicantId]="selectedApplicantId"
+        (updateApplicationStatusEvent)="onUpdateApplicantStatusd($event)" (closeModalEvent)="closeModal()">
+    </app-schedule-interview-modal>
+</div>
