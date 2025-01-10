@@ -86,6 +86,7 @@ export class JobsDataService {
   updateApplicantStatus(jobId: string, applicateId: string, status: StatusRemark): Observable<string> {
     let url: string = this._baseUrl;
     url = `${url}/${jobId}/${this._asubsetUrl}/${applicateId}`
+    console.log(status.jsonify());
     return this._httpClient.patch<{ message: string }>(url, status.jsonify()).pipe(
       map((response) => response.message),
       catchError(this.handleError)

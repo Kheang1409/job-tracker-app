@@ -1,4 +1,4 @@
-<div class="job-details">
+<div class="job-details" *ngIf="job != null">
     <div class="text-center"></div>
     <h3>{{ job.title }}</h3>
     <h5>{{ job.company }}</h5>
@@ -16,8 +16,17 @@
             ${{ job.minSalary | custom }} - ${{ job.maxSalary | custom }}
         </p>
     </div>
+    <div class="action-btn">
+        <button type="button" class="btn btn-primary" (click)="apply()" target="_blank"
+            [disabled]="job.isApplied(userId)">{{job.isApplied(userId) ? 'Applied' :
+            'Apply'}}</button>
+        <button *ngIf="isTheOwner()" type="button" class="btn btn-secondary" (click)="editJob()"
+            target="_blank">Edit</button>
+        <button *ngIf="isTheOwner()" type="button" class="btn btn-danger" (click)="updateJobStatus()"
+            target="_blank">{{job.status == 'Inactive' ? 'Reopen' : 'Hiring' }}</button>
+    </div>
 
-    <div *ngIf="isTheOwner()" class="job-update">
+    <div *ngIf="isTheOwner()" class="applicant-update">
         <h4>Applications: ({{job.totalApplications()}})</h4>
         <ul>
             <li *ngFor="let application of job.applications" class="applicant-details">
@@ -28,12 +37,11 @@
                         {{ application.status }}
                     </span>
                 </p>
-                <p><strong>Email:</strong> <a href="mailto:{{ application.email }}"
-                        style="text-align: left !important;">{{
+                <p><strong>Email:</strong> <a href="mailto:{{ application.email }}">{{
                         application.email }}</a></p>
-                <p><strong>Applied on:</strong> {{ application.appliedDate | date: 'short' }}</p>
+                <p><strong>Applied on:</strong> {{ application.appliedDate | date: 'short' : 'UTC' }}</p>
                 <p *ngIf="application.status == 'Interview'">
-                    <strong>Interview on:</strong> {{ application.interviewDate | date: 'short' }}
+                    <strong>Interview on:</strong> {{ application.interviewDate | date: 'short' : 'UTC' }}
                 </p>
                 <div class="action-btn" *ngIf="isActionDisable(application.status)">
                     <button class="btn btn-primary" (click)="action(application.id)">Action</button>
