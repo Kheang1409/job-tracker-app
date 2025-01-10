@@ -1,0 +1,29 @@
+<app-banner [isEmpty]="true" [title]="title" [description]="description">
+
+</app-banner>
+
+<div class="about-us">
+    <div class="team-section text-center">
+        <h2>Meet the Developer</h2>
+        <div class="team-member">
+            <img src="https://scontent.ffod1-1.fna.fbcdn.net/v/t39.30808-6/468953255_3954714521426878_3633001754698211679_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=G_NWW9HXIYsQ7kNvgEQlA5w&_nc_zt=23&_nc_ht=scontent.ffod1-1.fna&_nc_gid=Aoq7pQ4SBu4QX936c73XGWL&oh=00_AYDFrj1UNAX3t4a4YjtJtsyuGwJY1L4f8AFEIsaQy5YdAw&oe=6786848C"
+                alt="Hang Kheang Taing" class="team-member-img">
+            <h3>Hang Kheang Taing</h3>
+            <p>A passionate software developer focused on creating high-quality, scalable, and maintainable systems.
+                This project is developed entirely by me as a solo developer to learn about microservices, clean
+                code
+                practices, and the full software development lifecycle.</p>
+        </div>
+    </div>
+
+    <div class="tech-used-section text-center">
+        <h2>Technologies Used</h2>
+        <ul>
+            <li *ngFor="let technology of technologies"><strong>{{technology.title}}:</strong> {{technology.techName}}
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="footer">
+    <p>&copy; {{ currentYear }} JobTracker. All rights reserved.</p>
+</div>

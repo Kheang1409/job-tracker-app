@@ -1,0 +1,68 @@
+.about-us {
+    margin: 50px 0;
+}
+
+.team-section,
+.tech-used-section {
+    margin-bottom: 50px;
+}
+
+.team-section h2,
+.tech-used-section h2 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.team-member {
+    display: inline-block;
+    text-align: center;
+    max-width: 250px;
+}
+
+.team-member-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.team-member h3 {
+    font-size: 1.5em;
+    color: #333;
+}
+
+.team-member p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #555;
+}
+
+.tech-used-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.tech-used-section li {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.tech-used-section li strong {
+    color: #007bff;
+}
+
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 14px;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
+}
