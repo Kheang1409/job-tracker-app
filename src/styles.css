@@ -458,25 +458,33 @@ h5 {
     color: #fff;
 }
 
-.job-update {
+.job-update,
+.applicant-update {
     background: white;
     padding: 10px 20px;
     border-radius: 5px;
 }
 
-.job-update ul {
+.job-update ul,
+.applicant-update ul {
     list-style-type: none;
 }
 
-.job-update h4 strong {
+.job-update h4 strong,
+.applicant-update h4 strong {
     font-size: 30px;
     font-family: "Oswald", sans-serif;
 }
 
-.job-update .fa {
+.job-update .fa,
+.applicant-update .fa {
     margin-top: 5px;
     margin-right: 10px;
     color: #77d1b1;
+}
+
+.applicant-update a {
+    color: #018f62;
 }
 
 .price {
