@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { BannerComponent } from '../banner/banner.component';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-about',
-  imports: [CommonModule, BannerComponent],
+  imports: [CommonModule, BannerComponent, FooterComponent],
   templateUrl: './about.component.html',
   styleUrl: './about.component.css'
 })

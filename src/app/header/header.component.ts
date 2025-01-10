@@ -11,7 +11,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  title: string = environment.application.name;
   home: string = environment.urlFrontend.home;
   signIn: string = environment.urlFrontend.signIn;
   createJob: string = environment.urlFrontend.createJob;

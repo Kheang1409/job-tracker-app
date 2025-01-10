@@ -1,10 +1,8 @@
 export const environment = {
 
-    application: {
-        name: 'Restos',
-        description: 'Savor the flavors and indulge in the culinary delights. Experience unmatched taste and pure bliss.',
-        developer: 'Kheang',
-
+    contact: {
+        email: 'hangkheangtaing@gmail.com',
+        phoneNumber: '+ 1 641 233 0129',
     },
     params: {
         jobId: 'id'
