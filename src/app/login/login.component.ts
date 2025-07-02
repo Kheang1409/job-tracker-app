@@ -1,70 +1,60 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { UsersDataService } from '../users-data.service';
-import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
-import { User } from '../user';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { environment } from '../../environments/environment.development';
-import { BannerComponent } from '../banner/banner.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, BannerComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
-  token!: string;
-  loginForm!: FormGroup;
-  user!: User
+export class LoginComponent implements OnInit{
 
-  unauthorizedMessage: string = '';
-  isUnauthorized: boolean = false;
+  loginForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', Validators.required)
+  });
 
-  home: string = environment.urlFrontend.home;
+  errorMessage: string | null = null;
+  returnUrl: string | null = null;
+  
+  constructor(
+    private _authService: AuthService,
+    private _route: ActivatedRoute,
+    private _router: Router
+  ){
 
-  constructor(private _formBuilder: FormBuilder, private _usersService: UsersDataService, private _authService: AuthService, private _router: Router) {
-    this.user = new User();
-    this.redirectToHomePageIfLoggedIn();
   }
 
   ngOnInit(): void {
-    this.loginForm = this._formBuilder.group({
-      email: '',
-      password: '',
-    });
+    this.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/jobs';
   }
-  login() {
-    this.user.fill(this.loginForm);
-    this.getToken(this.user);
-  }
-  getToken(user: User) {
-    this._usersService.getToken(user).subscribe(
-      {
-        next: (token) => {
-          this.unauthorizedMessage = '';
-          this.isUnauthorized = false;
-          this._authService.setToken(token);
-        },
-        error: (error) => {
-          this.unauthorizedMessage = error.message;
-          this.isUnauthorized = true;
-        },
-        complete: () => {
-          if (!this.isUnauthorized) {
-            this.unauthorizedMessage = '';
-            this.isUnauthorized = false;
-            this.redirectToHomePageIfLoggedIn();
-          }
+
+  login(){
+    if (this.loginForm.invalid) {
+      return;
+    }
+    this._authService.login(
+      this.loginForm.value?.email || '',
+      this.loginForm.value?.password || ''
+    ).subscribe({
+      next: (response) => {
+        this._authService.setToken(response.token);
+        this.errorMessage = null;  
+      },
+      error: (error) => {
+        // console.error(error.message);
+        this.errorMessage = error.message;
+      },
+      complete:() =>{
+        if (this.errorMessage === null) {
+          this._router.navigateByUrl(this.returnUrl!);
         }
       }
-    )
-  }
-  redirectToHomePageIfLoggedIn() {
-    if (this._authService.isLoggedIn()) {
-      this._router.navigate([this.home]);
-    }
+    });
   }
 }

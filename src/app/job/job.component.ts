@@ -1,159 +1,182 @@
-import { Component, OnInit, Pipe } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { JobsDataService } from '../jobs-data.service';
-import { Job } from '../job';
-import { AuthService } from '../auth.service';
+import { Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CustomPipe } from '../custom.pipe';
-import { ScheduleInterviewModalComponent } from '../schedule-interview-modal/schedule-interview-modal.component';
-import { StatusRemark } from '../status';
-import { environment } from '../../environments/environment.development';
+import { JobsDataService } from '../services/jobs-data.service';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { JobDetail } from '../classes/jobDetail';
+import { AuthService } from '../services/auth.service';
+import { Candidate } from '../classes/candidate';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-job',
-  imports: [CommonModule, CustomPipe, ScheduleInterviewModalComponent],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './job.component.html',
   styleUrl: './job.component.css'
 })
 export class JobComponent implements OnInit {
-  jobId: string = '';
-  job!: Job;
-  selectedApplicantId: string = '';
-  userId: string = '';
-  isError: boolean = false;
-  errorMessage: string = '';
 
-  isModalVisible: boolean = false;
+  jobId!: string;
+  job!: JobDetail;
+  userId!: string;
+  userEmail!: string;
+  isApplying = false;
+  currentUserCandidate?: Candidate;
+  candiateCount!: number;
+  errorMessage: string | null = null;
 
-  editJobUrl: string = environment.urlFrontend.editJob;
-  signIn: string = environment.urlFrontend.signIn;
+  // ✅ Track UI loading state
+  loading = {
+    apply: false,
+    withdraw: false,
+    delete: false,
+    close: false,
+    reopen: false
+  };
 
-  constructor(private _authService: AuthService, private _activatedRouter: ActivatedRoute, private _jobsService: JobsDataService, private _router: Router) { }
+  constructor(
+    private _jobService: JobsDataService,
+    private _activatedRouter: ActivatedRoute,
+    private _authService: AuthService,
+    private _router: Router
+  ) {
+    if (this._authService.isLoggedIn()) {
+      this.userId = this._authService.userId() || '';
+    }
+  }
 
   ngOnInit(): void {
-    if (this._authService.isLoggedIn()) {
-      this.userId = this._authService.getUserId();
-    }
+    this.getJobDetail();
+  }
+
+  getJobDetail(): void {
     this.jobId = this._activatedRouter.snapshot.params['id'];
-    this.getJob();
-  }
-
-  getJob() {
-    this._jobsService.getJob(this.jobId).subscribe({
+    this._jobService.getJob(this.jobId).subscribe({
       next: (job) => {
-        this.job = Object.assign(new Job(), job);
+        this.job = Object.assign(new JobDetail(), job);
+        this.errorMessage = null;
+        this.candiateCount = this.job.candidateCount();
+        this.setCandidateState();
       },
       error: (error) => {
-        this.isError = true;
         this.errorMessage = error.message;
-        console.error(error.message);
-      },
-      complete: () => {
-
       }
     });
   }
 
-  action(applicantId: string) {
-    this.selectedApplicantId = applicantId;
-    this.isModalVisible = true;
-    console.log(this.isModalVisible);
+  setCandidateState(): void {
+    const candidate = this.job.candidates.find(
+      c => c.candidateId === this.userId && c.status === 'Applied'
+    );
+    this.currentUserCandidate = candidate;
+    this.isApplying = candidate?.status === 'Applied' || candidate?.status === 'Selected';
   }
 
-  closeModal() {
-    this.isModalVisible = false;
-  }
-
-  updateApplicantStatus(jobId: string, applicantId: string, status: StatusRemark) {
-    this._jobsService.updateApplicantStatus(jobId, applicantId, status).subscribe({
-      next: (updatedJob) => {
-        this.job.applications.filter(application => application.id == applicantId).map(application => application.status = status.status);
-        alert(updatedJob);
-      },
-      error: (error) => {
-        this.isError = true;
-        this.errorMessage = error.message;
-        console.error(error.message);
-      },
-      complete: () => {
-        this.closeModal();
-      }
-    });
-    this.closeModal();
-  }
-
-  isTheOwner(): boolean {
-    return this.job.userId == this.userId;
-  }
-
-  isActionDisable(status: string): boolean {
-    return status == 'Interview' || status == 'Applied';
-  }
-
-  onUpdateApplicantStatusd(event: { jobId: string; applicantId: string; status: StatusRemark }) {
-    const { jobId, applicantId, status } = event;
-    this.updateApplicantStatus(jobId, applicantId, status);
-  }
-
-  getBadgeClass(status: string): string {
-    switch (status) {
-      case 'Applied':
-        return 'badge-primary';
-      case 'Interview':
-        return 'badge-info';
-      case 'Selected':
-        return 'badge-success';
-      case 'Rejected':
-        return 'badge-danger';
-      default:
-        return 'badge-secondary';
-    }
-  }
-
-  updateJobStatus() {
-    this.onAuthorized();
-    this._jobsService.updateJobStatus(this.jobId).subscribe({
-      next: (job) => {
-        this.job = Object.assign(new Job(), job);
-        this.isError = false;
-      },
-      error: (error) => {
-        this.isError = true;
-        this.errorMessage = error.message;
-        console.log(error.message);
-      },
-      complete: () => {
-
-      }
-    });
-  }
-
-  apply() {
-    this.onAuthorized();
-    this._jobsService.applyJob(this.jobId).subscribe({
-      next: (application) => {
-        this.job.newApplication(application);
-      },
-      error: (error) => {
-        this.isError = true;
-        this.errorMessage = error.message;
-        console.log(error.message);
-      },
-      complete: () => {
-
-      }
-    })
-  }
-
-  editJob() {
-    this.onAuthorized();
-    this._router.navigate([`${this.editJobUrl}/${this.jobId}`]);
-  }
-
-  onAuthorized() {
+  onApply(): void {
     if (!this._authService.isLoggedIn()) {
-      this._router.navigate([this.signIn]);
+      this._router.navigate(['/login'], {
+        queryParams: { returnUrl: this._router.url }
+      });
+      return;
     }
+
+    this.loading.apply = true;
+
+    this._jobService.applied(this.jobId).subscribe({
+      next: (candidate) => {
+        const newCandidate = Object.assign(new Candidate(), candidate);
+        this.job.candidates.push(newCandidate);
+        this.currentUserCandidate = newCandidate;
+        this.isApplying = true;
+        this.setCandidateState();
+        this.candiateCount += 1;
+        this.errorMessage = null;
+      },
+      error: (error) => {
+        this.errorMessage = error.message;
+      },
+      complete: () => {
+        this.loading.apply = false;
+      }
+    });
   }
 
+  onWithdraw(): void {
+    if (!this.isApplying) return;
+
+    this.loading.withdraw = true;
+
+    this._jobService.withdraw(this.jobId).subscribe({
+      next: () => {
+        if (this.currentUserCandidate) {
+          this.currentUserCandidate.status = 'Withdrawn';
+        }
+        this.isApplying = false;
+        this.candiateCount -= 1;
+        this.errorMessage = null;
+      },
+      error: (error) => {
+        this.errorMessage = error.message;
+      },
+      complete: () => {
+        this.loading.withdraw = false;
+      }
+    });
+  }
+
+  deleteJob(): void {
+    this.loading.delete = true;
+
+    this._jobService.deleteJob(this.jobId).subscribe({
+      next: (response) => {
+        if (response) {
+          console.log(response);
+          this._router.navigate(['/jobs']);
+        }
+      },
+      error: (error) => {
+        this.errorMessage = error.message;
+      },
+      complete: () => {
+        this.loading.delete = false;
+      }
+    });
+  }
+
+  onCloseApplication(): void {
+    if (this.job.status.toLowerCase() === 'closed') return;
+
+    this.loading.close = true;
+
+    // this._jobService.closeJob(this.jobId).subscribe({
+    //   next: () => {
+    //     this.job.status = 'closed';
+    //     this.errorMessage = null;
+    //   },
+    //   error: (error) => {
+    //     this.errorMessage = error.message;
+    //   },
+    //   complete: () => {
+    //     this.loading.close = false;
+    //   }
+    // });
+  }
+
+  onReopenApplication(): void {
+    if (this.job.status.toLowerCase() === 'active') return;
+
+    this.loading.reopen = true;
+
+    // this._jobService.reopenJob(this.jobId).subscribe({
+    //   next: () => {
+    //     this.job.status = 'active';
+    //     this.errorMessage = null;
+    //   },
+    //   error: (error) => {
+    //     this.errorMessage = error.message;
+    //   },
+    //   complete: () => {
+    //     this.loading.reopen = false;
+    //   }
+    // });
+  }
 }

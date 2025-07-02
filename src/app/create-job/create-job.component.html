@@ -1,75 +1,360 @@
-<app-banner [isEmpty]="true"></app-banner>
+<div class="w-full max-w-lg mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
+  <h1 class="text-3xl font-semibold text-gray-800 text-center mb-6">Create Application</h1>
 
-<div class="form">
-    <h1 class="heading">Create Application!</h1>
-    <form (ngSubmit)="create()" #jobForm="ngForm">
-        <div *ngIf="activeTab === 1">
-            <div class="form-group">
-                <input type="text" class="inp_box" placeholder="Title" [(ngModel)]="job.title" name="title" required>
-                <span class="required-asterisk">*</span>
-            </div>
-            <div class="form-group">
-                <input type="text" class="inp_box" placeholder="Company" [(ngModel)]="job.company" name="company"
-                    required>
-                <span class="required-asterisk">*</span>
-            </div>
-            <div class="form-group">
-                <input type="number" class="inp_box" placeholder="Available Positions" [(ngModel)]="job.maxPosition"
-                    name="maxPosition" value="1" min="1" required>
-                <span class="required-asterisk">*</span>
-            </div>
-            <div class="form-group">
-                <input type="number" class="inp_box" placeholder="Min Salary" [(ngModel)]="job.minSalary"
-                    name="minSalary" value="0" min="0" required>
-                <span class="required-asterisk">*</span>
-            </div>
-            <div class="form-group">
-                <input type="number" class="inp_box" placeholder="Max Salary" [(ngModel)]="job.maxSalary"
-                    name="maxSalary" value="0" min="0">
-                <span class="required-asterisk">*</span>
-            </div>
-            <div class="button-container">
-                <button type="button" class="btn2" (click)="next()">Next</button>
+  <!-- Tabs Navigation -->
+  <div class="flex border-b-2 border-gray-300 mb-6">
+    <button
+      (click)="activeTab = 1"
+      class="w-1/4 py-2 text-center font-semibold text-gray-600"
+      [ngClass]="{'border-b-2 border-gray-800': activeTab === 1}">
+      Job Basics
+    </button>
+    <button
+      (click)="activeTab = 2"
+      class="w-1/4 py-2 text-center font-semibold text-gray-600"
+      [ngClass]="{'border-b-2 border-gray-800': activeTab === 2}">
+      Experience & Salary
+    </button>
+    <button
+      (click)="activeTab = 3"
+      class="w-1/4 py-2 text-center font-semibold text-gray-600"
+      [ngClass]="{'border-b-2 border-gray-800': activeTab === 3}">
+      Skills & Description
+    </button>
+    <button
+      (click)="activeTab = 4"
+      class="w-1/4 py-2 text-center font-semibold text-gray-600"
+      [ngClass]="{'border-b-2 border-gray-800': activeTab === 4}">
+      Location
+    </button>
+  </div>
+
+  <form [formGroup]="jobForm" (ngSubmit)="submit()">
+
+    <!-- Tab 1: Job Basics -->
+    <div *ngIf="activeTab === 1">
+      <div class="space-y-4">
+
+        <div class="flex flex-col">
+          <label for="title" class="text-gray-700 font-medium">Job Title</label>
+          <input
+            formControlName="title"
+            id="title"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            placeholder="Title"
+          />
+          <div *ngIf="jobForm.get('title')?.invalid && jobForm.get('title')?.touched" class="text-red-500 text-sm">
+            <div *ngIf="jobForm.get('title')?.hasError('required')">Job title is required.</div>
+            <div *ngIf="jobForm.get('title')?.hasError('maxlength')">Job title must be at most 100 characters.</div>
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+          <label for="companyName" class="text-gray-700 font-medium">Company Name</label>
+          <input
+            formControlName="companyName"
+            id="companyName"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            placeholder="companyName"
+          />
+          <div *ngIf="jobForm.get('companyName')?.invalid && jobForm.get('companyName')?.touched" class="text-red-500 text-sm">
+            <div *ngIf="jobForm.get('companyName')?.hasError('required')">Company name is required.</div>
+            <div *ngIf="jobForm.get('companyName')?.hasError('maxlength')">Company name must be at most 100 characters.</div>
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+            <label for="workMode" class="text-gray-700 font-medium">Work Mode</label>
+            <select
+                formControlName="workMode"
+                id="workMode"
+                class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+                <option value="" disabled selected>Select Work Mode</option>
+                <option value="Onsite">Onsite</option>
+                <option value="Remote">Remote</option>
+                <option value="Hybrid">Hybrid</option>
+            </select>
+            <div *ngIf="jobForm.get('workMode')?.invalid && jobForm.get('workMode')?.touched" class="text-red-500 text-sm">
+                <div *ngIf="jobForm.get('workMode')?.hasError('required')">Work mode is required.</div>
             </div>
         </div>
 
-        <div *ngIf="activeTab === 2">
-            <div class="form-group">
-                <input type="text" class="inp_box" placeholder="Country" [(ngModel)]="job.location.country"
-                    name="country">
-            </div>
-            <div class="form-group">
-                <input type="text" class="inp_box" placeholder="State" [(ngModel)]="job.location.state" name="state">
-            </div>
-            <div class="form-group">
-                <input type="text" class="inp_box" placeholder="City" [(ngModel)]="job.location.city" name="city">
-            </div>
-            <div class="form-group">
-                <input type="text" class="inp_box" placeholder="Address" [(ngModel)]="job.location.address"
-                    name="address">
-            </div>
-            <div class="form-group">
-                <input type="number" class="inp_box" placeholder="Zip Code" [(ngModel)]="job.location.zip" name="zip">
-            </div>
-            <div class="button-container">
-                <button type="button" class="btn2 prev" (click)="previouse()">Previous</button>
-                <button type="button" class="btn2 next" (click)="next()">Next</button>
+        <div class="flex flex-col">
+            <label for="employmentType" class="text-gray-700 font-medium">Employment Type</label>
+            <select
+                formControlName="employmentType"
+                id="workMode"
+                class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+                <option value="" disabled selected>Select Employment Type</option>
+                <option value="FullTime">Full-Time</option>
+                <option value="PartTime">Part-Time</option>
+                <option value="Contract">Contract</option>
+                <option value="Internship">Internship</option>
+                <option value="Temporary">Temporary</option>
+            </select>
+            <div *ngIf="jobForm.get('employmentType')?.invalid && jobForm.get('employmentType')?.touched" class="text-red-500 text-sm">
+                <div *ngIf="jobForm.get('employmentType')?.hasError('required')">Employment type is required.</div>
             </div>
         </div>
 
-        <div *ngIf="activeTab === 3">
-            <div class="form-group">
-                <input type="text" class="inp_box" placeholder="Skills" [(ngModel)]="skillsString" name="skills">
-            </div>
-            <div class="form-group">
-                <textarea class="inp_box" placeholder="Job Description" [(ngModel)]="job.description"
-                    name="description"></textarea>
-            </div>
-            <div class="button-container">
-                <button type="button" class="btn2 prev" (click)="previouse()">Previous</button>
-                <button type="submit" class="btn2 submit">Submit</button>
-            </div>
+        <!-- Number of Openings with synced range & number -->
+        <div class="flex flex-col">
+          <label for="numberOfOpenings" class="text-gray-700 font-medium">Available Positions</label>
+          <div class="flex items-center space-x-4">
+            <input
+              type="range"
+              min="1"
+              max="20"
+              formControlName="numberOfOpenings"
+              (input)="onInputChange('numberOfOpenings', $event)"
+              class="w-full h-2 bg-gray-300 rounded-lg cursor-pointer accent-gray-800"
+            />
+            <input
+              type="number"
+              min="1"
+              max="20"
+              formControlName="numberOfOpenings"
+              (input)="onInputChange('numberOfOpenings', $event)"
+            />
+          </div>
+          <div *ngIf="jobForm.get('numberOfOpenings')?.invalid && jobForm.get('numberOfOpenings')?.touched" class="text-red-500 text-sm">
+            <div *ngIf="jobForm.get('numberOfOpenings')?.hasError('min')">At least one opening is required.</div>
+          </div>
         </div>
-        <h4 class="error" *ngIf="isError">{{errorMessage}}</h4>
-    </form>
+
+        <div class="flex justify-center mt-6">
+          <button
+            type="button"
+            (click)="activeTab = 2"
+            class="btn2 p-3 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Experience & Salary -->
+    <div *ngIf="activeTab === 2">
+      <div class="space-y-4">
+
+        <!-- Min Experience with synced range & number -->
+        <div class="flex flex-col">
+          <label for="minExperience" class="text-gray-700 font-medium">Min Experience (years)</label>
+          <div class="flex items-center space-x-4">
+            <input
+              type="range"
+              min="0"
+              max="20"
+              formControlName="minExperience"
+              (input)="onInputChange('minExperience', $event)"
+              class="w-full h-2 bg-gray-300 rounded-lg cursor-pointer accent-gray-800"
+            />
+            <input
+              type="number"
+              min="0"
+              max="20"
+              formControlName="minExperience"
+              (input)="onInputChange('minExperience', $event)"
+            />
+          </div>
+          <div *ngIf="jobForm.get('minExperience')?.invalid && jobForm.get('minExperience')?.touched" class="text-red-500 text-sm">
+            <div *ngIf="jobForm.get('minExperience')?.hasError('min')">Experience cannot be negative.</div>
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+          <label for="minSalary" class="text-gray-700 font-medium">Min Salary</label>
+          <input
+            formControlName="minSalary"
+            id="minSalary"
+            type="number"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            placeholder="Min Salary"
+          />
+          <div *ngIf="jobForm.get('minSalary')?.invalid && jobForm.get('minSalary')?.touched" class="text-red-500 text-sm">
+            <div *ngIf="jobForm.get('minSalary')?.hasError('min')">Minimum salary cannot be negative.</div>
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+          <label for="maxSalary" class="text-gray-700 font-medium">Max Salary</label>
+          <input
+            formControlName="maxSalary"
+            id="maxSalary"
+            type="number"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            placeholder="Max Salary"
+          />
+          <div *ngIf="jobForm.get('maxSalary')?.invalid && jobForm.get('maxSalary')?.touched" class="text-red-500 text-sm">
+            <div *ngIf="jobForm.get('maxSalary')?.hasError('min')">Maximum salary cannot be negative.</div>
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+          <label for="currency" class="text-gray-700 font-medium">Currency</label>
+          <select
+            formControlName="currency"
+            id="currency"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            <option value="" disabled>Select Currency</option>
+            <option value="USD">USD - US Dollar</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="GBP">GBP - British Pound</option>
+            <option value="INR">INR - Indian Rupee</option>
+          </select>
+          <div *ngIf="jobForm.get('currency')?.invalid && jobForm.get('currency')?.touched" class="text-red-500 text-sm">
+            <div *ngIf="jobForm.get('currency')?.hasError('required')">Currency is required.</div>
+          </div>
+        </div>
+
+        <div class="flex justify-center mt-6">
+          <button
+            type="button"
+            (click)="activeTab = 3"
+            class="btn2 p-3 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Skills & Description -->
+    <div *ngIf="activeTab === 3">
+      <div class="space-y-4">
+
+        <div class="flex flex-col">
+          <label class="text-gray-700 font-medium">Required Skills</label>
+          <input
+            [(ngModel)]="skillInput"
+            [ngModelOptions]="{ standalone: true }"
+            (keydown.enter)="addSkill($event)"
+            placeholder="Type skills separated by semicolons and press Enter"
+            class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+          />
+
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span
+              *ngFor="let skill of skillsList"
+              class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center"
+            >
+              {{ skill.name }}
+              <button type="button" class="ml-2 text-red-600" (click)="removeSkill(skill.name)">×</button>
+            </span>
+          </div>
+          <div *ngIf="jobForm.get('requiredSkills')?.invalid && jobForm.get('requiredSkills')?.touched" class="text-red-500 text-sm mt-1">
+            <div *ngIf="jobForm.get('requiredSkills')?.hasError('required')">Skills are required.</div>
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+          <label for="jobDescription" class="text-gray-700 font-medium">Job Description</label>
+          <textarea
+            formControlName="jobDescription"
+            id="jobDescription"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            placeholder="Job Description"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-center mt-6">
+          <button
+            type="button"
+            (click)="activeTab = 4"
+            class="btn2 p-3 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Location -->
+    <div *ngIf="activeTab === 4">
+      <div class="space-y-4">
+
+        <div class="flex flex-col">
+          <label for="street" class="text-gray-700 font-medium">Street</label>
+          <input
+            formControlName="street"
+            id="street"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            placeholder="Street"
+          />
+        </div>
+
+        <div class="flex flex-col">
+          <label for="postalCode" class="text-gray-700 font-medium">Postal Code</label>
+          <input
+            id="postalCode"
+            formControlName="postalCode"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            placeholder="Postal Code"
+          />
+        </div>
+
+        <div class="flex flex-col">
+          <label for="city" class="text-gray-700 font-medium">City</label>
+          <input
+            formControlName="city"
+            id="city"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            placeholder="City"
+          />
+        </div>
+
+        <div class="flex flex-col">
+        <label for="state" class="text-gray-700 font-medium">State</label>
+          <input
+            formControlName="state"
+            id="state"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            placeholder="State"
+          />
+        </div>
+
+        <div class="flex flex-col">
+          <label for="country" class="text-gray-700 font-medium">Country</label>
+          <input
+            formControlName="country"
+            id="country"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            placeholder="Country"
+          />
+        </div>
+
+        <div class="flex flex-col">
+          <label for="expirationDate" class="text-gray-700 font-medium">Expiration Date</label>
+          <input
+            formControlName="expirationDate"
+            id="expirationDate"
+            type="date"
+            class="inp_box p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            placeholder="Expiration Date"
+            [min]="todayDate"
+          />
+          <div *ngIf="jobForm.get('expirationDate')?.invalid && jobForm.get('expirationDate')?.touched" class="text-red-500 text-sm">
+            <div *ngIf="jobForm.get('expirationDate')?.hasError('required')">Expiration date is required.</div>
+            <div *ngIf="jobForm.get('expirationDate')?.hasError('invalidDate')">Expiration date cannot be in the past.</div>
+          </div>
+        </div>
+
+        <div class="flex justify-center mt-6">
+          <button
+            type="submit"
+            [disabled]="jobForm.invalid"
+            class="btn2 p-3 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>

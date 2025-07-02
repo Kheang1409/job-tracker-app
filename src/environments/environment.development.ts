@@ -1,59 +1,46 @@
 export const environment = {
-
-    contact: {
-        email: 'hangkheangtaing@gmail.com',
-        phoneNumber: '+ 1 641 233 0129',
-    },
-    params: {
-        jobId: 'id'
-    },
-    urlShared: {
-        login: '/login',
-    },
     urlFrontend: {
         home: 'home',
-        signIn: 'sign-in',
-        signUp: 'sign-up',
-        job: 'job',
-        job_id: 'job/:id',
-        createJob: 'create-job',
-        editJob: 'edit-job',
-        editJob_id: 'edit-job/:id',
         about: 'about',
-        contact: 'contact',
+        login: 'login',
+        signUp: 'sign-up',
+        jobs: 'jobs',
+        jobId: 'job/:id',
+        myJobs: 'my-jobs',
+        createJob: 'create-job',
+        editJob: 'edit-job/:id',
+        profile: 'profile',
+        forgotPassword: 'forgot-password',
+        resetPassword: 'reset-password',
         error: '**',
     },
-    urlApi: {
-        baseUserUrl: 'http://localhost:5000/api/users',
-        baseJobUrl: 'http://localhost:5002/api/jobs',
-        subsetUrl: 'applications',
-        total: 'totals',
-        status: 'status',
-        query: {
-            pageNumber: 'pageNumber',
-            status: 'status',
-            sort: 'sort',
+    api: {
+        baseUrl: 'http://localhost:5000/api',
+        auth: {
+            base: 'auth',
+            forgotPassword: 'forgot-password',
+            resetPassword: 'reset-password',
+            login: 'login'
         },
+        users: {
+            base: 'users',
+            me: 'me',
+            skills: 'skills'
+        },
+        jobs: {
+            base: 'jobs',
+            total: 'total',
+            candidates: 'candidates',
+            me: 'me'
+        }
     },
-    message: {
-        updateFailMessage: 'Update unsuccessfully!',
-        createFailMessage: 'Create unsuccessfully!',
-        unauthorizedMessage: 'Unauthorized!',
-        missingUsernamePassword: 'Missing Email or Password!',
-        passwordMissedMatch: 'Password missed match!',
-        filledInTheBlank: 'Filled in the Blank!'
-    },
-    numbers: {
-        page: 1,
-        limit: 5,
+    CONSTAINT: {
+        PAGE: 1,
+        LIMIT: 9,
     },
     keys: {
         tokenKey: 'authToken',
+        resetPasswordToken: 'resetPasswordToken',
         pageNumberKey: 'pageNumber'
     },
-    forms: {
-
-        applicationForm: 'applicationForm',
-        jobForm: 'jobForm',
-    }
 };

@@ -1,12 +1,12 @@
 import { NgForm } from "@angular/forms";
 
-export class Location {
+export class Address {
     #id!: string;
+    #country!: string;
+    #street!: string;
     #city!: string;
     #state!: string;
-    #country!: string;
-    #address!: string;
-    #zip!: string;
+    #postalCode!: string;
 
     get id(): string {
         return this.#id;
@@ -20,11 +20,11 @@ export class Location {
     get country(): string {
         return this.#country;
     }
-    get address(): string {
-        return this.#address;
+    get street(): string {
+        return this.#street;
     }
-    get zip(): string {
-        return this.#zip;
+    get postalCode(): string {
+        return this.#postalCode;
     }
 
     set id(id: string) {
@@ -39,28 +39,20 @@ export class Location {
     set country(country: string) {
         this.#country = country;
     }
-    set address(address: string) {
-        this.#address = address;
+    set street(street: string) {
+        this.#street = street;
     }
     set zip(zip: string) {
-        this.#zip = zip;
-    }
-
-    fill(form: NgForm) {
-        this.id = form.value.id;
-        this.city = form.value.city;
-        this.state = form.value.state;
-        this.country = form.value.country;
-        this.zip = form.value.zip;
+        this.#postalCode = zip;
     }
 
     jsonify() {
         return {
-            id: this.#id,
+            country: this.country,
+            street: this.street,
             city: this.city,
             state: this.state,
-            country: this.country,
-            zip: this.zip
+            postalCode: this.zip
         }
     }
 }

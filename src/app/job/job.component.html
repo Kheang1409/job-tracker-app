@@ -1,58 +1,183 @@
-<div class="job-details" *ngIf="job != null">
-    <div class="text-center"></div>
-    <h3>{{ job.title }}</h3>
-    <h5>{{ job.company }}</h5>
+<!-- Page Wrapper -->
+<div class="min-h-screen flex items-start justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl w-full space-y-8">
 
-    <div class="job-update">
-        <p><strong>Experience Required:</strong> {{ job.minExperience }}+ years</p>
-        <p><strong>Position:</strong> {{ job.maxPosition }}</p>
-        <p><strong>Skills:</strong> {{ job.arraySkillsToString() }}</p>
-        <p><strong>Location:</strong> {{ job.getLocation() }}</p>
-        <p><strong>Status:</strong> {{ job.status }}</p>
-        <p><strong>Description:</strong> {{ job.description }}</p>
+    <!-- Card -->
+    <div *ngIf="job" class="bg-white shadow-lg rounded-xl px-6 py-8 sm:px-10 lg:px-12 space-y-10">
 
-        <p>
-            <strong>Salary Range:</strong>
-            ${{ job.minSalary | custom }} - ${{ job.maxSalary | custom }}
+      <!-- Header -->
+      <div class="flex flex-col lg:flex-row justify-between gap-4">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">{{ job.title }}</h1>
+          <p class="text-lg text-gray-600 mt-1">{{ job.companyName }}</p>
+        </div>
+        <div>
+          <span
+            class="inline-block px-4 py-1 rounded-full text-sm font-semibold"
+            [ngClass]="{
+              'bg-green-100 text-green-800': !job.isExpired() && job.status.toLowerCase() === 'active',
+              'bg-gray-200 text-gray-700': !job.isExpired() && job.status.toLowerCase() === 'closed',
+              'bg-red-100 text-red-800': job.isExpired(),
+            }"
+          >
+            {{ job.isExpired() ? 'Expired' : job.status  }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <section>
+        <h2 class="text-lg font-semibold text-gray-800 mb-1">Job Description</h2>
+        <p class="text-gray-700 leading-relaxed">{{ job.jobDescription }}</p>
+      </section>
+
+      <!-- Metadata Grid -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6 text-sm">
+        <ng-container *ngFor="let info of [
+          { label: 'Employment Type', value: job.employmentType },
+          { label: 'Work Mode', value: job.workMode },
+          { label: 'Openings', value: job.numberOfOpenings },
+          { label: 'Created At', value: job.createdAt | date: 'longDate' },
+          { label: 'Candidates Applied', value: candiateCount || 0 },
+          { label: 'Experience Required', value: job.minExperience || 0 }
+        ]">
+          <div class="flex flex-col">
+            <span class="text-gray-500 font-medium">{{ info.label }}</span>
+            <span class="text-gray-900">{{ info.value }}</span>
+          </div>
+        </ng-container>
+      </section>
+
+      <!-- Salary -->
+      <section>
+        <h2 class="text-lg font-semibold text-gray-800 mb-1">Salary</h2>
+        <p class="text-gray-700 text-sm">
+          <ng-container *ngIf="job.salary?.minSalary && job.salary?.maxSalary && job.salary.minSalary !== job.salary.maxSalary; else singleSalary">
+            {{ job.salary.minSalary | currency: job.salary.currency:'symbol' }}
+            – {{ job.salary.maxSalary | currency: job.salary.currency:'symbol' }}
+          </ng-container>
+          <ng-template #singleSalary>
+            {{ job.salary.maxSalary | currency: job.salary.currency:'symbol' }}
+          </ng-template>
         </p>
-    </div>
-    <div class="action-btn">
-        <button type="button" class="btn btn-primary" (click)="apply()" target="_blank"
-            [disabled]="job.isApplied(userId)">{{job.isApplied(userId) ? 'Applied' :
-            'Apply'}}</button>
-        <button *ngIf="isTheOwner()" type="button" class="btn btn-secondary" (click)="editJob()"
-            target="_blank">Edit</button>
-        <button *ngIf="isTheOwner()" type="button" class="btn btn-danger" (click)="updateJobStatus()"
-            target="_blank">{{job.status == 'Inactive' ? 'Reopen' : 'Hiring' }}</button>
-    </div>
+      </section>
 
-    <div *ngIf="isTheOwner()" class="applicant-update">
-        <h4>Applications: ({{job.totalApplications()}})</h4>
-        <ul>
-            <li *ngFor="let application of job.applications" class="applicant-details">
-                <p><strong>Applicant:</strong> {{ application.username }}</p>
-                <p>
-                    <strong>Status:</strong>
-                    <span class="badge" [ngClass]="getBadgeClass(application.status)">
-                        {{ application.status }}
-                    </span>
-                </p>
-                <p><strong>Email:</strong> <a href="mailto:{{ application.email }}">{{
-                        application.email }}</a></p>
-                <p><strong>Applied on:</strong> {{ application.appliedDate | date: 'short' : 'UTC' }}</p>
-                <p *ngIf="application.status == 'Interview'">
-                    <strong>Interview on:</strong> {{ application.interviewDate | date: 'short' : 'UTC' }}
-                </p>
-                <div class="action-btn" *ngIf="isActionDisable(application.status)">
-                    <button class="btn btn-primary" (click)="action(application.id)">Action</button>
-                </div>
-            </li>
-        </ul>
-    </div>
-</div>
+      <!-- Location -->
+      <section>
+        <h2 class="text-lg font-semibold text-gray-800 mb-1">Location</h2>
+        <p class="text-gray-700 text-sm">
+          {{ job.jobLocation.street }}, {{ job.jobLocation.city }},
+          {{ job.jobLocation.state }}, {{ job.jobLocation.country }}
+          <span class="block text-xs text-gray-500">Postal Code: {{ job.jobLocation.postalCode }}</span>
+        </p>
+      </section>
 
-<div *ngIf="isModalVisible">
-    <app-schedule-interview-modal [jobId]="jobId" [applicantId]="selectedApplicantId"
-        (updateApplicationStatusEvent)="onUpdateApplicantStatusd($event)" (closeModalEvent)="closeModal()">
-    </app-schedule-interview-modal>
+      <!-- Required Skills -->
+      <section>
+        <h2 class="text-lg font-semibold text-gray-800 mb-1">Required Skills</h2>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let skill of job.requirementSkills" class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-3 py-1 rounded-full">
+            {{ skill.name }}
+          </span>
+        </div>
+      </section>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="text-center text-sm text-red-600">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Actions -->
+      <section class="space-y-4">
+        <ng-container *ngIf="job">
+
+          <!-- Candidate: Not Yet Applied -->
+          <ng-container *ngIf="!isApplying">
+            <button
+              (click)="onApply()"
+              [disabled]="loading.apply || job.isExpired()"
+              class="w-full sm:w-auto bg-neutral-700 hover:bg-neutral-800 focus:ring-2 focus:ring-neutral-400 focus:outline-none text-white font-medium px-6 py-2 rounded-md shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span *ngIf="!loading.apply">
+                {{
+                  currentUserCandidate?.status === 'Withdrawn'
+                    ? 'Apply Again'
+                    : currentUserCandidate?.status === 'Rejected'
+                    ? 'Reapply'
+                    : 'Apply Now'
+                }}
+              </span>
+              <span *ngIf="loading.apply" class="inline-flex items-center gap-2">
+                <svg class="animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z">
+                  </path>
+                </svg>
+                Applying...
+              </span>
+            </button>
+          </ng-container>
+
+          <!-- Candidate: Already Applied -->
+          <div *ngIf="isApplying" class="flex flex-col sm:flex-row gap-4">
+            <span class="inline-block bg-gray-100 text-gray-800 px-4 py-2 rounded text-sm shadow">
+              Application {{ currentUserCandidate?.status }}
+            </span>
+
+            <button
+              *ngIf="currentUserCandidate?.status === 'Applied'"
+              (click)="onWithdraw()"
+              [disabled]="loading.withdraw"
+              class="bg-neutral-600 hover:bg-neutral-700 focus:ring-2 focus:ring-neutral-400 focus:outline-none text-white font-medium px-6 py-2 rounded-md shadow transition disabled:opacity-50"
+            >
+              <ng-container *ngIf="!loading.withdraw">Withdraw Application</ng-container>
+              <ng-container *ngIf="loading.withdraw">Withdrawing...</ng-container>
+            </button>
+          </div>
+
+          <!-- Author Controls -->
+          <div *ngIf="job.authorId === userId" class="flex flex-col sm:flex-row gap-4 pt-2">
+
+            <button
+              [routerLink]="['/edit-job', job.id]"
+              class="bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-white font-medium px-6 py-2 rounded-md shadow transition"
+            >
+              Update Job
+            </button>
+
+            <button
+              (click)="deleteJob()"
+              [disabled]="loading.delete"
+              class="bg-gray-700 hover:bg-gray-800 focus:ring-2 focus:ring-gray-400 focus:outline-none text-white font-medium px-6 py-2 rounded-md shadow transition disabled:opacity-50"
+            >
+              <ng-container *ngIf="!loading.delete">Delete Job Posting</ng-container>
+              <ng-container *ngIf="loading.delete">Deleting...</ng-container>
+            </button>
+
+            <button
+              *ngIf="job.status.toLowerCase() === 'active'"
+              (click)="onCloseApplication()"
+              [disabled]="loading.close"
+              class="bg-stone-600 hover:bg-stone-700 focus:ring-2 focus:ring-stone-400 focus:outline-none text-white font-medium px-6 py-2 rounded-md shadow transition disabled:opacity-50"
+            >
+              <ng-container *ngIf="!loading.close">Close Application</ng-container>
+              <ng-container *ngIf="loading.close">Closing...</ng-container>
+            </button>
+
+            <button
+              *ngIf="job.status.toLowerCase() === 'closed'"
+              (click)="onReopenApplication()"
+              [disabled]="loading.reopen"
+              class="bg-stone-600 hover:bg-stone-700 focus:ring-2 focus:ring-stone-400 focus:outline-none text-white font-medium px-6 py-2 rounded-md shadow transition disabled:opacity-50"
+            >
+              <ng-container *ngIf="!loading.reopen">Reopen Application</ng-container>
+              <ng-container *ngIf="loading.reopen">Reopening...</ng-container>
+            </button>
+          </div>
+
+        </ng-container>
+      </section>
+    </div>
+  </div>
 </div>

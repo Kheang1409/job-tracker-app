@@ -1,49 +1,150 @@
-<header class="main-header">
-    <div class="container">
-        <nav class="navbar navbar-expand-lg main-nav px-0">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu"
-                aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="icon-bar icon-bar-1"></span>
-                <span class="icon-bar icon-bar-2"></span>
-                <span class="icon-bar icon-bar-3"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainMenu">
-                <ul class="navbar-nav text-uppercase f1">
-                    <li>
-                        <a href="/" class=" active-first">Home</a>
-                    </li>
-                    <li>
-                        <a href="/about">About us</a>
-                    </li>
-                    <!-- <li>
-                        <a href="/allJobs ">All Jobs</a>
-                    </li> -->
-                    <li>
-                        <a href="/contact">Contact us</a>
-                    </li>
-                </ul>
-                <div class="nav-item dropdown ml-auto" *ngIf="isLoggedIn()">
-                    <a class="dropdown-toggle dropbtn" href="#" id="navbarDropdownMenuLink" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/fox.jpg"
-                            width="40" height="40" class="rounded-circle">
-                    </a>
-                    <div class="dropdown-menu dropdown-content" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="{{createJob}}">Create Job</a>
-                        <a class="dropdown-item" href="" (click)="logout()">Log Out</a>
-                    </div>
-                </div>
-                <div class="nav-item ml-auto" *ngIf="!isLoggedIn()">
-                    <ul class="navbar-nav text-uppercase f1">
-                        <li>
-                            <a routerLink="/sign-in">Login</a>
-                        </li>
-                        <li>
-                            <a routerLink="/sign-up">Sign Up</a>
-                        </li>
-                    </ul>
+<nav class="bg-gray-800">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <div class="flex items-center">
+          <div class="shrink-0">
+            <img class="size-16" src="https://raw.githubusercontent.com/Kheang1409/jobtracker-assets/refs/heads/main/logo.png" alt="Logo Company" />
+          </div>
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+              <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+              <a routerLink="/home" 
+                routerLinkActive="bg-gray-900 text-white" 
+                [routerLinkActiveOptions]="{ exact: true }" 
+                class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                Home
+              </a>
+              <a routerLink="/jobs" 
+                routerLinkActive="bg-gray-900 text-white" 
+                class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                Jobs
+              </a>
+              <a routerLink="/about" 
+                routerLinkActive="bg-gray-900 text-white" 
+                class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                About
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="hidden md:block">
+          <div class="ml-4 flex items-center md:ml-6">
+            <!-- Profile dropdown trigger -->
+            <div class="relative ml-3" *ngIf="isLoggedIn(); else loginButton">
+              <div>
+                <button
+                    type="button"
+                    class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800"
+                    (click)="toggleDropdown()"
+                    (clickOutside)="closeDropdown()"
+                    id="user-menu-button"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    >
+                    <span class="sr-only">Open user menu</span>
+                    <img class="size-8 rounded-full" src="https://raw.githubusercontent.com/Kheang1409/jobtracker-assets/f06a8955ea5e6c4cd1c4fa23ed14095d1584d2f6/user-default-profile.svg" alt="profile" />
+                </button>
+              </div>
+
+              <!-- Dropdown menu -->
+                <div
+                    class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
+                    *ngIf="isDropdownOpen()"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="user-menu-button">
+                    <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">Your Profile</a>
+                    <a routerLink="/my-jobs" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">My Jobs</a>
+                    <a routerLink="/create-job" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">Create Job Post</a>
+                    <a (click)="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:cursor-pointer" role="menuitem">Sign out</a>
                 </div>
             </div>
-        </nav>
+            <ng-template #loginButton>
+              <button (click)="login()" class="ml-4 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+                Login
+              </button>
+            </ng-template>
+          </div>
+        </div>
+        <div class="-mr-2 flex md:hidden">
+          <!-- Mobile menu button -->
+          <button
+              type="button"
+              (click)="toggleMobileMenu()"
+              [attr.aria-expanded]="isMobileMenuOpen()"
+              class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+            >
+              <span class="sr-only">Open main menu</span>
+
+              <!-- Hamburger icon (visible when menu is closed) -->
+              <svg
+                *ngIf="!isMobileMenuOpen()"
+                class="block size-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+
+              <!-- Close icon (visible when menu is open) -->
+              <svg
+                *ngIf="isMobileMenuOpen()"
+                class="block size-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </button>
+        </div>
+      </div>
     </div>
-</header>
+
+    <!-- Mobile menu, show/hide based on menu state. -->
+    <div [ngClass]="{ 'block': isMobileMenuOpen(), 'hidden': !isMobileMenuOpen() }" class="md:hidden" id="mobile-menu">
+      <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+        <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+        <a routerLink="/"
+          routerLinkActive="bg-gray-900 text-white"
+          [routerLinkActiveOptions]="{ exact: true }" 
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white" aria-current="page">
+            Home
+        </a>
+        <a routerLink="/jobs" 
+          routerLinkActive="bg-gray-900 text-white" 
+          [routerLinkActiveOptions]="{ exact: true }" 
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+          Jobs
+        </a>
+        <a routerLink="/about" 
+          routerLinkActive="bg-gray-900 text-white" 
+          [routerLinkActiveOptions]="{ exact: true }" 
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+          About
+        </a>
+      </div>
+      <div class="border-t border-gray-700 pb-3 pt-4">
+        <ng-container *ngIf="isLoggedIn(); else mobileLoginButton">
+          <div class="mt-3 space-y-1 px-2">
+            <a routerLink="/profile" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Your Profile</a>
+            <a routerLink="/my-jobs" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">My Jobs</a>
+            <a routerLink="/create-job" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Create Job Post</a>
+            <a (click)="logout()" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white hover:cursor-pointer">Sign out</a>
+          </div>
+        </ng-container>
+        <ng-template #mobileLoginButton>
+          <div class="px-5">
+            <button (click)="login()" class="w-full rounded-md bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-white hover:bg-indigo-700">
+              Login
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </nav>

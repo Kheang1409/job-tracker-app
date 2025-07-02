@@ -1,21 +1,101 @@
-<app-banner [isEmpty]="true"></app-banner>
-<div class="form">
-    <h1 class="heading">Sign Up</h1>
-    <form [formGroup]="userForm" (ngSubmit)="signUp()">
-        <div class="form-group">
-            <input type="text" class="inp_box" placeholder="Username" formControlName="username">
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+
+  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      
+      <!-- First Name -->
+      <div>
+        <label for="firstname" class="block text-sm font-medium text-gray-900">First name</label>
+        <div class="mt-2">
+          <input
+            type="text"
+            id="firstname"
+            formControlName="firstname"
+            autocomplete="given-name"
+            class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+          />
+          <div *ngIf="signUpForm.get('firstname')?.touched && signUpForm.get('firstname')?.invalid" class="text-sm text-red-600 mt-1">
+            First name is required.
+          </div>
         </div>
-        <div class="form-group">
-            <input type="email" class="inp_box" placeholder="Email" formControlName="email">
+      </div>
+
+      <!-- Last Name -->
+      <div>
+        <label for="lastname" class="block text-sm font-medium text-gray-900">Last name</label>
+        <div class="mt-2">
+          <input
+            type="text"
+            id="lastname"
+            formControlName="lastname"
+            autocomplete="family-name"
+            class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+          />
+          <div *ngIf="signUpForm.get('lastname')?.touched && signUpForm.get('lastname')?.invalid" class="text-sm text-red-600 mt-1">
+            Last name is required.
+          </div>
         </div>
-        <div class="form-group">
-            <input type="password" class="inp_box" placeholder="Password" formControlName="password">
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-900">Email address</label>
+        <div class="mt-2">
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            autocomplete="email"
+            class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+          />
+          <div *ngIf="signUpForm.get('email')?.touched && signUpForm.get('email')?.invalid" class="text-sm text-red-600 mt-1">
+            <span *ngIf="signUpForm.get('email')?.errors?.['required']">Email is required.</span>
+            <span *ngIf="!signUpForm.get('email')?.errors?.['required'] && signUpForm.get('email')?.errors?.['email']">
+              Please enter a valid email address.
+            </span>
+          </div>
         </div>
-        <div class="form-group">
-            <input type="password" class="inp_box" placeholder="Comfirm Password" formControlName="comfirmPassword">
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-900">Password</label>
+        <div class="mt-2">
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            autocomplete="new-password"
+            class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+          />
+          <div *ngIf="signUpForm.get('password')?.touched && signUpForm.get('password')?.invalid" class="text-sm text-red-600 mt-1">
+            <span *ngIf="signUpForm.get('password')?.errors?.['required']">Password is required.</span>
+            <span *ngIf="!signUpForm.get('password')?.errors?.['required'] && signUpForm.get('password')?.errors?.['minlength']">
+              Password must be at least 6 characters.
+            </span>
+          </div>
         </div>
-        <h4 class="error" *ngIf="isCreateFail">{{createFailMessage}}</h4>
-        <button type="submit" class="btn2">Sign Up</button>
-        <a href="/sign-in" class="login-link">Already have an account? Login</a>
+      </div>
+
+      <!-- Submit Button -->
+      <div>
+        <button
+          type="submit"
+          class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-2 focus:outline-indigo-600"
+        >
+          Sign up
+        </button>
+      </div>
+
+      <!-- Global Error Message (e.g. from server) -->
+      <div *ngIf="serverError" class="rounded-md bg-red-50 p-4 border border-red-200">
+        <p class="text-sm text-red-700 font-medium">{{ serverError }}</p>
+      </div>
     </form>
+
+    <p class="mt-10 text-center text-sm text-gray-500">
+      Already have an account?
+      <a routerLink="/login" class="font-semibold text-indigo-600 hover:text-indigo-500">Login</a>
+    </p>
+  </div>
 </div>

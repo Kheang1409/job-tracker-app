@@ -1,0 +1,164 @@
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="flex flex-col pl-0 mb-0 rounded-lg px-3 py-6 sm:px-6 lg:px-8">
+  <div class="space-y-12">
+    <div class="border-b border-gray-900/10 pb-12">
+      <h2 class="text-base/7 font-semibold text-gray-900">Personal Information</h2>
+
+      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <!-- First Name -->
+        <div class="sm:col-span-3">
+          <label for="first-name" class="block text-sm/6 font-medium text-gray-900">First name</label>
+          <div class="mt-2">
+            <input type="text" id="first-name" formControlName="firstName"
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+            <div *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched" class="text-red-600 text-sm mt-1">
+              First name is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- Last Name -->
+        <div class="sm:col-span-3">
+          <label for="last-name" class="block text-sm/6 font-medium text-gray-900">Last name</label>
+          <div class="mt-2">
+            <input type="text" id="last-name" formControlName="lastName"
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+            <div *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched" class="text-red-600 text-sm mt-1">
+              Last name is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="sm:col-span-4">
+          <label for="email" class="block text-sm/6 font-medium text-gray-900">Email address</label>
+          <div class="mt-2">
+            <input type="email" id="email" formControlName="email" [readonly]="true"
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+            <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" class="text-red-600 text-sm mt-1">
+              <span *ngIf="profileForm.get('email')?.errors?.['required']">Email is required.</span>
+              <span *ngIf="profileForm.get('email')?.errors?.['email']">Please enter a valid email address.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="sm:col-span-6">
+          <label for="bio" class="block text-sm/6 font-medium text-gray-900">Bio</label>
+          <div class="mt-2">
+            <textarea id="bio" formControlName="bio" rows="4"
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              placeholder="Tell us a little about yourself"></textarea>
+          </div>
+        </div>
+
+        <!-- Gender -->
+        <div class="sm:col-span-3">
+          <label for="gender" class="block text-sm/6 font-medium text-gray-900">Gender</label>
+          <div class="mt-2">
+            <select id="gender" formControlName="gender"
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+              <option value="" disabled selected>Select your gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="sm:col-span-3">
+            <label for="phoneNumber" class="block text-sm/6 font-medium text-gray-900">
+                Phone Number
+            </label>
+            <div class="mt-2">
+                <input
+                type="tel"
+                id="phoneNumber"
+                formControlName="phoneNumber"
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                placeholder="+12345678901"
+                inputmode="tel"
+                autocomplete="tel"
+                aria-describedby="phoneHelp"
+                pattern="^\+\d{1,3}\d{7,15}$"
+                />
+                <small id="phoneHelp" class="text-xs text-gray-500 mt-1">
+                Format: +CountryCode followed by 7 to 15 digits (e.g., +12345678901)
+                </small>
+            </div>
+
+            <!-- Optional Angular validation feedback -->
+            <div *ngIf="profileForm.get('phoneNumber')?.invalid && profileForm.get('phoneNumber')?.touched" class="text-red-600 text-sm mt-1">
+                <div *ngIf="profileForm.get('phoneNumber')?.errors?.['required']">Phone number is required.</div>
+                <div *ngIf="profileForm.get('phoneNumber')?.errors?.['pattern']">
+                Invalid phone number format. Use +CountryCode and digits only.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Country -->
+        <div class="sm:col-span-3">
+          <label for="country" class="block text-sm/6 font-medium text-gray-900">Country</label>
+          <div class="mt-2">
+            <select id="country" formControlName="country"
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+              <option value="" disabled selected>Select your country</option>
+              <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Street Address -->
+        <div class="col-span-full">
+          <label for="street" class="block text-sm/6 font-medium text-gray-900">Street address</label>
+          <div class="mt-2">
+            <input type="text" id="street" formControlName="street"
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+          </div>
+        </div>
+
+        <!-- City -->
+        <div class="sm:col-span-2 sm:col-start-1">
+          <label for="city" class="block text-sm/6 font-medium text-gray-900">City</label>
+          <div class="mt-2">
+            <input type="text" id="city" formControlName="city"
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+          </div>
+        </div>
+
+        <!-- State / Province -->
+        <div class="sm:col-span-2">
+          <label for="state" class="block text-sm/6 font-medium text-gray-900">State / Province</label>
+          <div class="mt-2">
+            <input type="text" id="state" formControlName="state"
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+          </div>
+        </div>
+
+        <!-- Postal Code -->
+        <div class="sm:col-span-2">
+          <label for="postal-code" class="block text-sm/6 font-medium text-gray-900">ZIP / Postal code</label>
+          <div class="mt-2">
+            <input type="text" id="postal-code" formControlName="postalCode"
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+            <div *ngIf="profileForm.get('postalCode')?.invalid && profileForm.get('postalCode')?.touched" class="text-red-600 text-sm mt-1">
+              Postal code must be 5 digits.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="serverError" class="rounded-md bg-red-50 p-4 border border-red-200">
+    <p class="text-sm text-red-700 font-medium">{{ serverError }}</p>
+  </div>
+  <div *ngIf="successMessage" class="rounded-md bg-green-50 p-4 border border-green-200 mb-4">
+    <p class="text-sm text-green-700 font-medium">{{ successMessage }}</p>
+  </div>
+  <!-- Submit Buttons -->
+  <div class="mt-6 flex items-center justify-end gap-x-6">
+    <button type="button" class="text-sm/6 font-semibold text-gray-900" (click)="cancel()">Cancel</button>
+    <button type="submit" [disabled]="!profileForm.valid"
+      class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+  </div>
+</form>
