@@ -6,6 +6,7 @@ import { JobDetail } from '../classes/jobDetail';
 import { AuthService } from '../services/auth.service';
 import { Candidate } from '../classes/candidate';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-job',
@@ -72,7 +73,7 @@ export class JobComponent implements OnInit {
 
   onApply(): void {
     if (!this._authService.isLoggedIn()) {
-      this._router.navigate(['/login'], {
+      this._router.navigate([environment.urlFrontend.login], {
         queryParams: { returnUrl: this._router.url }
       });
       return;

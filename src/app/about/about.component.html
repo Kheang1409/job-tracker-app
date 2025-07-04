@@ -12,7 +12,7 @@
     <div class="rounded-3xl rounded-t-3xl bg-white/60 p-8 ring-1 ring-gray-900/10 sm:mx-8 sm:rounded-b-none sm:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none">
       <div class="bg-white rounded-lg shadow-lg p-6 mt-6 transition-transform duration-300">
         <img src="https://raw.githubusercontent.com/Kheang1409/jobtracker-assets/refs/heads/main/profile.png" alt="Hang Kheang Taing" class="w-32 h-32 rounded-full mx-auto mb-4 ring-4 ring-indigo-500 object-cover"/>
-        <h3 class="text-xl font-semibold text-indigo-700 hover:cursor-pointer hover:scale-105">Kai Taing</h3>
+        <h3 class="text-center text-xl font-semibold text-indigo-700 hover:cursor-pointer hover:scale-105">Kai Taing</h3>
         <div class="mx-auto mt-6 max-w-2xl text-pretty text-center text-lg font-medium text-gray-600 sm:text-xl/8">
           A passionate software developer focused on creating high-quality, scalable, and maintainable systems. This project is developed entirely by me as a solo developer to learn about microservices, clean code practices, and the full software development lifecycle.
         </div>
@@ -29,12 +29,12 @@
       <div class="bg-white rounded-lg shadow-lg p-6 mt-6 transition-transform duration-300 space-y-6">
         <div *ngFor="let group of technologies" class="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6 text-left">
           <!-- Title Section (Tech Group Name) -->
-          <div class="w-full sm:w-40 font-medium text-indigo-700">
+          <div class="flex-shrink-0 sm:w-40 font-medium text-indigo-700 truncate">
             {{ group.title }}
           </div>
 
           <!-- Technology List Section -->
-          <div class="flex flex-wrap gap-2 sm:gap-6 justify-start">
+          <div class="flex flex-wrap gap-2 sm:gap-4 justify-start w-full">
             <span *ngFor="let tech of group.techList" class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-3 py-1 rounded-full hover:cursor-pointer hover:scale-105">
               {{ tech }}
             </span>

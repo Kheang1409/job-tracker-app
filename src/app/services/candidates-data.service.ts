@@ -30,23 +30,23 @@ export class CandidatesDataService {
     );
   }
 
-  moveOn(jobId: string, candidateId: string, round: any){
+  moveOn(jobId: string, candidateId: string, round: any): Observable<void>{
     const url: string = `${this._baseUrl}/${this._jobs.base}/${jobId}/${this._candidates.base}/${candidateId}`;
-    return this._httpClient.patch<Candidate>(url, round).pipe(
+    return this._httpClient.patch<void>(url, round).pipe(
       catchError(handler)
     );
   }
 
-  reject(jobId: string, candidateId: string){
+  reject(jobId: string, candidateId: string): Observable<void>{
     const url: string = `${this._baseUrl}/${this._jobs.base}/${jobId}/${this._candidates.base}/${candidateId}/${this._candidates.rejections}`;
-    return this._httpClient.post<Candidate>(url, {}).pipe(
+    return this._httpClient.post<void>(url, {}).pipe(
       catchError(handler)
     );
   }
 
-  select(jobId: string, candidateId: string){
+  select(jobId: string, candidateId: string): Observable<void>{
     const url: string = `${this._baseUrl}/${this._jobs.base}/${jobId}/${this._candidates.base}/${candidateId}/${this._candidates.selection}`;
-    return this._httpClient.post<Candidate>(url, {}).pipe(
+    return this._httpClient.post<void>(url, {}).pipe(
       catchError(handler)
     );
   }

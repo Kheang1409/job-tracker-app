@@ -13,6 +13,7 @@ import { handler } from '../untils/error-handler-utils';
 export class JobsDataService {
   private _baseUrl = environment.api.baseUrl;
   private _jobs = environment.api.jobs;
+  private _candidates = environment.api.jobs.candidates;
 
   constructor(
     private _httpClient: HttpClient
@@ -99,14 +100,14 @@ export class JobsDataService {
   }
 
   applied(id: string) : Observable<Candidate>{
-    const url: string = `${this._baseUrl}/${this._jobs.base}/${id}/${this._jobs.candidates}`;
+    const url: string = `${this._baseUrl}/${this._jobs.base}/${id}/${this._candidates.base}`;
     return this._httpClient.post<Candidate>(url, { }).pipe(
       catchError(handler)
     );
   }
 
   withdraw(id: string) : Observable<void>{
-    const url: string = `${this._baseUrl}/${this._jobs.base}/${id}/${this._jobs.candidates}/${this._jobs.me}`;
+    const url: string = `${this._baseUrl}/${this._jobs.base}/${id}/${this._candidates.base}/${this._jobs.me}`;
     return this._httpClient.delete<void>(url).pipe(
       catchError(handler)
     );

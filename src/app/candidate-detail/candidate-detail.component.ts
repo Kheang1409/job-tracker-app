@@ -107,37 +107,14 @@ export class CandidateDetailComponent implements OnInit {
     this.showNextStepModal = false;
   }
 
-  confirmNextStep() {
-    if (this.nextStepForm.invalid) {
-      this.serverError = 'Both title and appointment date are required.';
-      return;
-    }
-
-    const updatedRound = this.nextStepForm.value;
-
-    this._candidateServer.moveOn(this.jobId, this.candidateId, updatedRound).subscribe({
-      next: (isMoveOn) => {
-        if (isMoveOn) {
-          this.showNextStepModal = false;
-          this.getCandidateProfiile(this.jobId, this.candidateId);
-        }
-      },
-      error: (error) => {
-        this.serverError = error?.error?.message || 'Failed to schedule next step.';
-      }
-    });
-  }
-
   cancel() {
     this.showNextStepModal = false;
   }
 
   reject() {
     this._candidateServer.reject(this.jobId, this.candidateId).subscribe({
-      next: (isRejected) => {
-        if (isRejected) {
-          this.getCandidateProfiile(this.jobId, this.candidateId);
-        }
+      next: () => {
+        this.getCandidateProfiile(this.jobId, this.candidateId);
       },
       error: (error) => {
         this.serverError = error?.error?.message || 'Failed to reject candidate.';
@@ -147,10 +124,8 @@ export class CandidateDetailComponent implements OnInit {
 
   select() {
     this._candidateServer.select(this.jobId, this.candidateId).subscribe({
-      next: (isSelected) => {
-        if (isSelected) {
-          this.getCandidateProfiile(this.jobId, this.candidateId);
-        }
+      next: () => {
+        this.getCandidateProfiile(this.jobId, this.candidateId);
       },
       error: (error) => {
         this.serverError = error?.error?.message || 'Failed to select candidate.';
@@ -159,6 +134,13 @@ export class CandidateDetailComponent implements OnInit {
   }
 
   handleNextStep(event: any): void {
-    console.log('Next step confirmed with event:', event);
+    this._candidateServer.moveOn(this.jobId, this.candidateId, event).subscribe({
+      next: () => {
+        this.getCandidateProfiile(this.jobId, this.candidateId);
+      },
+      error: (error) => {
+        this.serverError = error?.error?.message || 'Failed to move on with candidate.';
+      }
+    });
   }
 }
