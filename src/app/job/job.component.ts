@@ -24,7 +24,6 @@ export class JobComponent implements OnInit {
   candiateCount!: number;
   errorMessage: string | null = null;
 
-  // ✅ Track UI loading state
   loading = {
     apply: false,
     withdraw: false,
@@ -65,7 +64,7 @@ export class JobComponent implements OnInit {
 
   setCandidateState(): void {
     const candidate = this.job.candidates.find(
-      c => c.candidateId === this.userId && c.status === 'Applied'
+      c => c.candidateId === this.userId
     );
     this.currentUserCandidate = candidate;
     this.isApplying = candidate?.status === 'Applied' || candidate?.status === 'Selected';
@@ -142,41 +141,40 @@ export class JobComponent implements OnInit {
     });
   }
 
+  onViewCandidates(): void {
+    // Implement your navigation or modal logic here
+    this._router.navigate(['/job', this.jobId, 'candidates']);
+  }
+
   onCloseApplication(): void {
-    if (this.job.status.toLowerCase() === 'closed') return;
-
     this.loading.close = true;
-
-    // this._jobService.closeJob(this.jobId).subscribe({
-    //   next: () => {
-    //     this.job.status = 'closed';
-    //     this.errorMessage = null;
-    //   },
-    //   error: (error) => {
-    //     this.errorMessage = error.message;
-    //   },
-    //   complete: () => {
-    //     this.loading.close = false;
-    //   }
-    // });
+    this._jobService.updateStatusJob(this.jobId, 'Closed').subscribe({
+      next: () => {
+        this.job.status = 'closed';
+        this.errorMessage = null;
+      },
+      error: (error) => {
+        this.errorMessage = error.message;
+      },
+      complete: () => {
+        this.loading.close = false;
+      }
+    });
   }
 
   onReopenApplication(): void {
-    if (this.job.status.toLowerCase() === 'active') return;
-
     this.loading.reopen = true;
-
-    // this._jobService.reopenJob(this.jobId).subscribe({
-    //   next: () => {
-    //     this.job.status = 'active';
-    //     this.errorMessage = null;
-    //   },
-    //   error: (error) => {
-    //     this.errorMessage = error.message;
-    //   },
-    //   complete: () => {
-    //     this.loading.reopen = false;
-    //   }
-    // });
+    this._jobService.updateStatusJob(this.jobId, 'Reposted').subscribe({
+      next: () => {
+        this.job.status = 'reopen';
+        this.errorMessage = null;
+      },
+      error: (error) => {
+        this.errorMessage = error.message;
+      },
+      complete: () => {
+        this.loading.reopen = false;
+      }
+    });
   }
 }

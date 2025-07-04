@@ -118,16 +118,23 @@ export class CreateJobComponent implements OnInit{
   }
 
   addSkill(event: Event): void {
-     event.preventDefault();
+    event.preventDefault();
     addSkillToList(this.skillInput, this.skillsList, (updatedSkills) => {
       this.skillsList = updatedSkills;
+      this.jobForm.get('requiredSkills')?.setValue(this.skillsList);
+    }, (updatedSkills) => {
+      this.jobForm.get('requiredSkills')?.setValue(updatedSkills);
     });
     this.skillInput = '';
   }
 
   removeSkill(skillName: string): void {
     removeSkillFromList(skillName, this.skillsList, (updatedSkills) => {
-      this.skillsList = updatedSkills; // Update the skills list after removal
+      this.skillsList = updatedSkills;
+      this.jobForm.get('requiredSkills')?.setValue(this.skillsList);
+    }, (updatedSkills) => {
+      this.jobForm.get('requiredSkills')?.setValue(updatedSkills);
     });
+    console.log(this.skillsList);
   }
 }

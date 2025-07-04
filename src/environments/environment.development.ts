@@ -6,6 +6,8 @@ export const environment = {
         signUp: 'sign-up',
         jobs: 'jobs',
         jobId: 'job/:id',
+        candidates: 'job/:id/candidates',
+        candidateId: ':job/:jobId/candidate/:id',
         myJobs: 'my-jobs',
         createJob: 'create-job',
         editJob: 'edit-job/:id',
@@ -30,7 +32,12 @@ export const environment = {
         jobs: {
             base: 'jobs',
             total: 'total',
-            candidates: 'candidates',
+            candidates: {
+                base: 'candidates',
+                rejections: 'rejections',
+                selection: 'selection'
+            } ,
+            status: 'status',
             me: 'me'
         }
     },

@@ -83,6 +83,13 @@ export class JobsDataService {
     );
   }
 
+  updateStatusJob(id: string, status: string){
+    const url: string = `${this._baseUrl}/${this._jobs.base}/${id}/${this._jobs.status}`;
+    return this._httpClient.put<boolean>(url, {status}).pipe(
+      catchError(handler)
+    );
+  }
+
   deleteJob(id: string): Observable<boolean>{
     const url: string = `${this._baseUrl}/${this._jobs.base}/${id}`;
     console.log(url);

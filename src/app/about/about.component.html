@@ -25,11 +25,16 @@
       <p class="mt-4 flex items-baseline gap-x-2">
         <span class="text-5xl font-semibold tracking-tight text-white">Tech Stack</span>
       </p>
-      
+
       <div class="bg-white rounded-lg shadow-lg p-6 mt-6 transition-transform duration-300 space-y-6">
-        <div *ngFor="let group of technologies" class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 text-left">
-          <div class="w-full sm:w-40 font-medium text-indigo-700">{{ group.title }}</div>
-          <div class="flex flex-wrap gap-2">
+        <div *ngFor="let group of technologies" class="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6 text-left">
+          <!-- Title Section (Tech Group Name) -->
+          <div class="w-full sm:w-40 font-medium text-indigo-700">
+            {{ group.title }}
+          </div>
+
+          <!-- Technology List Section -->
+          <div class="flex flex-wrap gap-2 sm:gap-6 justify-start">
             <span *ngFor="let tech of group.techList" class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-3 py-1 rounded-full hover:cursor-pointer hover:scale-105">
               {{ tech }}
             </span>

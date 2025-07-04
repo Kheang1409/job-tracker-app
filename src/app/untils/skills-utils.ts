@@ -1,7 +1,8 @@
 export function addSkillToList(
   skillInput: string,
   skillsList: { name: string }[],
-  setSkillsList: (skills: { name: string }[]) => void
+  setSkillsList: (skills: { name: string }[]) => void,
+  updateFormSkills: (updatedSkills: { name: string }[]) => void 
 ): void {
   const skillInputs = skillInput.split(';');
   
@@ -13,6 +14,7 @@ export function addSkillToList(
     ) {
       skillsList.push({ name: trimmed });
       setSkillsList([...skillsList]); 
+      updateFormSkills([...skillsList]);
     }
   }
 }
@@ -20,8 +22,10 @@ export function addSkillToList(
 export function removeSkillFromList(
   skill: string,
   skillsList: { name: string }[],
-  setSkillsList: (skills: { name: string }[]) => void
+  setSkillsList: (skills: { name: string }[]) => void,
+  updateFormSkills: (updatedSkills: { name: string }[]) => void
 ): void {
   const updatedSkills = skillsList.filter(s => s.name !== skill);
   setSkillsList(updatedSkills);
+  updateFormSkills(updatedSkills);
 }

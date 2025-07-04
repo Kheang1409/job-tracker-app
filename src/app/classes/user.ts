@@ -1,15 +1,20 @@
-import { FormGroup } from "@angular/forms";
 import { Address } from "./address";
+import { Experience } from "./experience";
+import { ContactNumber } from "./contactNumber";
+import { Project } from "./project";
 
 export class User {
-    #id!: string
-    #firstName!: string
-    #lastName!: string
-    #bio!: string
-    #gender!: string
-    #email!: string
-    #phoneNumber!: string
-    #address!: Address
+    #id!: string;
+    #firstName!: string;
+    #lastName!: string;
+    #bio!: string;
+    #gender!: string;
+    #email!: string;
+    #contactNumber!: ContactNumber;
+    #address!: Address;
+    #skills!: { name: string }[]
+    #experiences!: Experience[]
+    #projects!: Project[]
 
     get id(): string {
         return this.#id;
@@ -26,14 +31,23 @@ export class User {
     get gender(): string{
         return this.#gender;
     }
-    get phoneNumber(): string{
-        return this.#phoneNumber;
+    get contactNumber(): ContactNumber{
+        return this.#contactNumber;
     }
     get email(): string {
         return this.#email;
     }
     get address(): Address {
         return this.#address;
+    }
+    get skills(): { name: string }[] {
+        return this.#skills;
+    }
+    get experiences(): Experience[] {
+        return this.#experiences;
+    }
+    get projects(): Project[] {
+        return this.#projects;
     }
 
     set firstName(firstName: string){
@@ -48,8 +62,8 @@ export class User {
     set gender(gender : string){
         this.#gender = gender;
     }
-    set phoneNumber(phoneNumer: string){
-        this.#phoneNumber = phoneNumer
+    set contactNumber(contactNumber: ContactNumber){
+        this.#contactNumber = contactNumber
     }
     set email(email : string) {
         this.#email = email;
@@ -57,15 +71,13 @@ export class User {
     set address(address: Address){
         this.#address = address;
     }
-
-    jsonify() {
-        return {
-            firstName: this.firstName,
-            lastName: this.lastName,
-            bio: this.bio,
-            gender: this.gender,
-            email: this.email,
-            address: this.address.jsonify()
-        }
+    set skills(skills: { name: string }[]){
+        this.#skills = skills;
+    }
+    set experiences(experiences: Experience[]){
+        this.#experiences = experiences;
+    }
+    set projects(projects: Project[]){
+        this.#projects = projects;
     }
 }

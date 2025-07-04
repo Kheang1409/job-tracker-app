@@ -13,6 +13,8 @@ import { AboutComponent } from './about/about.component';
 import { MyJobsComponent } from './my-jobs/my-jobs.component';
 import { CreateJobComponent } from './create-job/create-job.component';
 import { EditJobComponent } from './edit-job/edit-job.component';
+import { CandidatesComponent } from './candidates/candidates.component';
+import { CandidateDetailComponent } from './candidate-detail/candidate-detail.component';
 
 
 const home = environment.urlFrontend.home;
@@ -21,6 +23,8 @@ const login = environment.urlFrontend.login;
 const signUp = environment.urlFrontend.signUp;
 const jobs = environment.urlFrontend.jobs;
 const job_id = environment.urlFrontend.jobId;
+const candidates = environment.urlFrontend.candidates;
+const candidate_id = environment.urlFrontend.candidateId;
 const my_jobs = environment.urlFrontend.myJobs;
 const create_job = environment.urlFrontend.createJob;
 const edit_job = environment.urlFrontend.editJob;
@@ -52,6 +56,12 @@ export const routes: Routes = [
         path: job_id, component: JobComponent
     },
     {
+        path: candidates, component: CandidatesComponent
+    },
+    {
+        path: candidate_id, component: CandidateDetailComponent
+    },
+    {
         path: profile, component: ProfileComponent
     },
     {
@@ -69,7 +79,6 @@ export const routes: Routes = [
     {
         path: resetPassword, component : ResetPasswordComponent
     },
-    
     {
         path: error, component: ErrorPageComponent
     }

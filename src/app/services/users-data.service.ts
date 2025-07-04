@@ -19,6 +19,13 @@ export class UsersDataService {
     private _httpClient: HttpClient
   ) { }
 
+  getUser(userId: string): Observable<User> {
+    const url: string = `${this._baseUrl}/${this._users.base}/${userId}`;
+    return this._httpClient.get<User>(url).pipe(
+      catchError(handler)
+    );
+  }
+
   getUserProfile(): Observable<User> {
     const url: string = `${this._baseUrl}/${this._users.base}/${this._users.me}`;
     return this._httpClient.get<User>(url).pipe(

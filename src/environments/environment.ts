@@ -1,12 +1,16 @@
 export const environment = {
     urlFrontend: {
         home: 'home',
-        jobs: 'jobs',
         about: 'about',
         login: 'login',
         signUp: 'sign-up',
-        job: 'job',
+        jobs: 'jobs',
         jobId: 'job/:id',
+        candidates: 'job/:id/candidates',
+        candidateId: 'candidate/:id',
+        myJobs: 'my-jobs',
+        createJob: 'create-job',
+        editJob: 'edit-job/:id',
         profile: 'profile',
         forgotPassword: 'forgot-password',
         resetPassword: 'reset-password',
@@ -22,23 +26,20 @@ export const environment = {
         },
         users: {
             base: 'users',
-            me: 'me'
+            me: 'me',
+            skills: 'skills'
         },
         jobs: {
             base: 'jobs',
             total: 'total',
             candidates: 'candidates',
+            status: 'status',
             me: 'me'
-        },
-        // query: {
-        //     pageNumber: 'pageNumber',
-        //     status: 'status',
-        //     sort: 'sort',
-        // },
+        }
     },
-    numbers: {
-        page: 1,
-        limit: 4,
+    CONSTAINT: {
+        PAGE: 1,
+        LIMIT: 9,
     },
     keys: {
         tokenKey: 'authToken',

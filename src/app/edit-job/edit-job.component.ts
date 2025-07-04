@@ -99,8 +99,8 @@ export class EditJobComponent implements OnInit {
 
       },
       error: (error) => {
-        console.error(error);
-        this.serverError = 'Failed to load job data.';
+        // console.error(error);
+        this.serverError = error?.error?.message || 'An unexpected error occurred. Please try again.';
       }
     });
   }
@@ -125,8 +125,9 @@ export class EditJobComponent implements OnInit {
     if (this.jobForm.valid && this.jobId) {
       this._jobService.updateJob(this.jobId, this.jobForm.value).subscribe({
         next: () => this._router.navigate([`/job/${this.jobId}`]),
-        error: (err) => {
-          this.serverError = err?.error?.message || 'Update failed.';
+        error: (error) => {
+          console.error(error);
+          this.serverError = error?.error?.message || 'An unexpected error occurred. Please try again.';
         }
       });
     } else {
@@ -156,14 +157,21 @@ export class EditJobComponent implements OnInit {
   addSkill(event: Event): void {
     event.preventDefault();
     addSkillToList(this.skillInput, this.skillsList, (updatedSkills) => {
-      this.skillsList = updatedSkills; // Update the skills list after adding
+      this.skillsList = updatedSkills;
+      this.jobForm.get('requiredSkills')?.setValue(this.skillsList);
+    }, (updatedSkills) => {
+      this.jobForm.get('requiredSkills')?.setValue(updatedSkills);
     });
     this.skillInput = '';
   }
 
   removeSkill(skillName: string): void {
     removeSkillFromList(skillName, this.skillsList, (updatedSkills) => {
-      this.skillsList = updatedSkills; // Update the skills list after removal
+      this.skillsList = updatedSkills;
+      this.jobForm.get('requiredSkills')?.setValue(this.skillsList);
+    }, (updatedSkills) => {
+      this.jobForm.get('requiredSkills')?.setValue(updatedSkills);
     });
+    console.log(this.skillsList);
   }
 }

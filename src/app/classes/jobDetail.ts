@@ -12,7 +12,7 @@ export class JobDetail {
     #numberOfOpenings!: number;
     #minExperience!: number;
     #salary!: Salary;
-    #requirementSkills!: { name: string }[]; // Array of required skills
+    #requirementSkills!: { name: string }[];
     #jobDescription!: string;
     #jobLocation!: Address;
     #candidates!: Candidate[];
@@ -99,7 +99,7 @@ export class JobDetail {
     }
 
     set candidates(candidates: Candidate[]) {
-        this.#candidates = candidates;
+        this.#candidates = candidates.filter(candidate => candidate.status !== 'Withdrawn');
     }
 
     get jobDescription(): string {
@@ -165,10 +165,10 @@ export class JobDetail {
     }
 
     isApplied(candidateId: string): boolean{
-        return this.#candidates.some(candidate => candidate.candidateId === candidateId && candidate.status === 'Applied');
+        return this.#candidates.some(candidate => candidate.candidateId === candidateId);
     }
 
     candidateCount(): number{
-        return this.#candidates.filter(candidate => candidate.status === 'Applied').length;
+        return this.#candidates.length;
     }
 }

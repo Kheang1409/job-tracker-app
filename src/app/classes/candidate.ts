@@ -1,14 +1,15 @@
+import { Round } from "./round";
+
 export class Candidate {
   #id!: string;
   #candidateId!: string;
-  #fullName!: string;
+  #firstName!: string;
+  #lastName!: string;
   #email!: string;
-  #phoneNumber!: string;
-  #resumeUrl?: string;
-  #coverLetter?: string;
-  #appliedAt!: Date;
+  #rounds!: Round[];
+  #currentRound!: string;
   #status!: string;
-  #notes?: string;
+  #appliedDate!: Date;
 
   get id(): string {
     return this.#id;
@@ -22,71 +23,62 @@ export class Candidate {
     return this.#candidateId;
   }
 
-  set candidateId(value: string) {
-    this.#candidateId = value;
+  set candidateId(candidateId: string) {
+    this.#candidateId = candidateId;
   }
 
-  get fullName(): string {
-    return this.#fullName;
+  get firstName(): string {
+    return this.#firstName;
   }
 
-  set fullName(value: string) {
-    this.#fullName = value;
+  set firstName(firstName: string) {
+    this.#firstName = firstName;
+  }
+
+  get lastName(): string {
+    return this.#lastName;
+  }
+
+  set lastName(lastName: string) {
+    this.#lastName = lastName;
   }
 
   get email(): string {
     return this.#email;
   }
 
-  set email(value: string) {
-    this.#email = value;
+  set email(email: string) {
+    this.#email = email;
   }
 
-  get phoneNumber(): string {
-    return this.#phoneNumber;
+  get rounds(): Round[] {
+    return this.#rounds;
   }
 
-  set phoneNumber(value: string) {
-    this.#phoneNumber = value;
+  set rounds(rounds: Round[]) {
+    this.#rounds = rounds;
   }
 
-  get resumeUrl(): string | undefined {
-    return this.#resumeUrl;
+  get currentRound(): string{
+    return this.#currentRound
   }
-
-  set resumeUrl(value: string | undefined) {
-    this.#resumeUrl = value;
-  }
-
-  get coverLetter(): string | undefined {
-    return this.#coverLetter;
-  }
-
-  set coverLetter(value: string | undefined) {
-    this.#coverLetter = value;
-  }
-
-  get appliedAt(): Date {
-    return this.#appliedAt;
-  }
-
-  set appliedAt(value: Date) {
-    this.#appliedAt = value;
+  set currentRound(currentRound: string){
+    this.#currentRound = currentRound;
   }
 
   get status(): string {
     return this.#status;
   }
 
-  set status(value: string) {
-    this.#status = value;
+  set status(status: string) {
+    this.#status = status;
   }
 
-  get notes(): string | undefined {
-    return this.#notes;
+  get appliedDate(): Date {
+    return this.#appliedDate;
   }
 
-  set notes(value: string | undefined) {
-    this.#notes = value;
+  set appliedDate(appliedDate: Date) {
+    this.#appliedDate = appliedDate;
   }
 }
