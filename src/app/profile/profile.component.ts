@@ -81,31 +81,34 @@ export class ProfileComponent implements OnInit {
     this.serverError = null;
     this.successMessage = null;
 
+    // Check if no changes were made
     if (!this.profileForm.dirty) {
       this.generalError = 'No changes made to the form.';
       return;
     }
 
-
-    if (this.profileForm.valid) {
-      this._userService.updateUserProfile(this.profileForm.value).subscribe({
-        next: () => {
-          // console.log('Profile updated successfully');
-          this.successMessage = 'Profile updated successfully!';
-          this.generalError = null;
-          this.profileForm.markAsPristine();
-          this.profileForm.markAsUntouched();
-        },
-        error: (error) => {
-          // console.error('Error updating profile:', error);
-          this.serverError = error?.error?.message || 'An unexpected error occurred. Please try again.';
-
-        }
-      });
-    } else {
+    // If the form is invalid, mark all as touched and exit
+    if (!this.profileForm.valid) {
       this.profileForm.markAllAsTouched();
-      // console.log('Form is not valid');
+      return;
     }
+
+    // Proceed with the update if form is valid
+    this._userService.updateUserProfile(this.profileForm.value).subscribe({
+      next: () => {
+        this.successMessage = 'Profile updated successfully!';
+        this.generalError = null;
+        this.resetFormState();
+      },
+      error: (error) => {
+        this.serverError = error?.error?.message || 'An unexpected error occurred. Please try again.';
+      }
+    });
+  }
+
+  private resetFormState(): void {
+    this.profileForm.markAsPristine();
+    this.profileForm.markAsUntouched();
   }
 
   addSkill(event: Event): void {
