@@ -1,16 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-banner',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './banner.component.html',
   styleUrl: './banner.component.css'
 })
 export class BannerComponent {
-  @Input() isEmpty!: boolean;
-  @Input() title!: string;
-  @Input() description!: string;
-
 
 }

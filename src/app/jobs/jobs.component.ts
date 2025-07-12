@@ -1,36 +1,78 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Job } from '../job';
-import { CustomPipe } from '../custom.pipe';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { JobsDataService } from '../services/jobs-data.service';
+import { Job } from '../classes/job';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-jobs',
-  imports: [CommonModule, CustomPipe],
+  imports: [CommonModule, RouterModule],
   templateUrl: './jobs.component.html',
-  styleUrl: './jobs.component.css'
+  styleUrls: ['./jobs.component.css']
 })
-export class JobsComponent {
+export class JobsComponent implements OnInit {
 
-  @Input() userId!: string
-  @Input() jobs!: Job[]
+  jobs!: Job[];
+  pageNumber: number = environment.CONSTAINT.PAGE;
+  limit: number = environment.CONSTAINT.LIMIT;
+  totalJobs: number = 0;
+  totalPages: number = 0;
 
-  @Output() updateStatusEvent = new EventEmitter<string>();
-  @Output() applyEvent = new EventEmitter<string>();
-  @Output() editJobEvent = new EventEmitter<string>();
-  @Output() viewJobDetailEvent = new EventEmitter<string>();
+  constructor(
+    private _router: Router,
+    private _jobService: JobsDataService
+  ) { }
 
-  updateStatus(jobId: string) {
-    this.updateStatusEvent.emit(jobId); // Emit jobId to parent
+  ngOnInit(): void {
+    const storedPage = sessionStorage.getItem('currentPage');
+    if (storedPage) {
+      this.pageNumber = +storedPage;
+    }
+    this.getJobCount();
+    this.getJobs();
   }
 
-  apply(jobId: string) {
-    this.applyEvent.emit(jobId); // Emit jobId to parent
+  getJobs(): void {
+    this._jobService.getJobs(this.pageNumber, this.limit).subscribe({
+      next: (jobs) => {
+        this.jobs = jobs;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
 
-  editJob(jobId: string) {
-    this.editJobEvent.emit(jobId); // Emit jobId to parent
+  getJobCount(): void{
+    this._jobService.getJobCount().subscribe({
+      next: (jobCounts) => {
+        this.totalJobs = jobCounts;
+        if (this.limit > 0) {
+          this.totalPages = Math.ceil(this.totalJobs / this.limit);
+        } else {
+          console.error('Limit must be greater than 0');
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
-  viewJob(jobId: string) {
-    this.viewJobDetailEvent.emit(jobId);
+
+  goToJobDetails(id: string): void {
+    this._router.navigate(['/job', id]);
+  }
+
+  applyJob(job: any): void {
+    job.applied = !job.applied;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.pageNumber = page;
+      sessionStorage.setItem('currentPage', this.pageNumber.toString());
+      this.getJobs();
+    }
   }
 }

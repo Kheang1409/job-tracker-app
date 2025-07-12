@@ -4,21 +4,33 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 import { environment } from '../environments/environment.development';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
-import { EditJobComponent } from './edit-job/edit-job.component';
-import { CreateJobComponent } from './create-job/create-job.component';
 import { JobComponent } from './job/job.component';
+import { JobsComponent } from './jobs/jobs.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { AboutComponent } from './about/about.component';
-import { ContactUsComponent } from './contact-us/contact-us.component';
+import { MyJobsComponent } from './my-jobs/my-jobs.component';
+import { CreateJobComponent } from './create-job/create-job.component';
+import { EditJobComponent } from './edit-job/edit-job.component';
+import { CandidatesComponent } from './candidates/candidates.component';
+import { CandidateDetailComponent } from './candidate-detail/candidate-detail.component';
 
 
 const home = environment.urlFrontend.home;
-const signIn = environment.urlFrontend.signIn;
-const signUp = environment.urlFrontend.signUp;
-const job_id = environment.urlFrontend.job_id;
-const editJob_id = environment.urlFrontend.editJob_id;
-const createJob = environment.urlFrontend.createJob;
 const about = environment.urlFrontend.about;
-const contact = environment.urlFrontend.contact;
+const login = environment.urlFrontend.login;
+const signUp = environment.urlFrontend.signUp;
+const jobs = environment.urlFrontend.jobs;
+const job_id = environment.urlFrontend.jobId;
+const candidates = environment.urlFrontend.candidates;
+const candidate_id = environment.urlFrontend.candidateId;
+const my_jobs = environment.urlFrontend.myJobs;
+const create_job = environment.urlFrontend.createJob;
+const edit_job = environment.urlFrontend.editJob;
+const profile = environment.urlFrontend.profile;
+const forgotPassword = environment.urlFrontend.forgotPassword;
+const resetPassword = environment.urlFrontend.resetPassword;
 const error = environment.urlFrontend.error;
 
 export const routes: Routes = [
@@ -29,25 +41,43 @@ export const routes: Routes = [
         path: home, component: HomeComponent
     },
     {
-        path: signIn, component: LoginComponent
+        path: about, component: AboutComponent
+    },
+    {
+        path: login, component: LoginComponent
     },
     {
         path: signUp, component: SignUpComponent
     },
     {
+        path: jobs, component: JobsComponent
+    },
+    {
         path: job_id, component: JobComponent
     },
     {
-        path: createJob, component: CreateJobComponent
+        path: candidates, component: CandidatesComponent
     },
     {
-        path: editJob_id, component: EditJobComponent
+        path: candidate_id, component: CandidateDetailComponent
     },
     {
-        path: about, component: AboutComponent
+        path: profile, component: ProfileComponent
     },
     {
-        path: contact, component: ContactUsComponent
+        path: my_jobs, component: MyJobsComponent
+    },
+    {
+        path: create_job, component: CreateJobComponent
+    },
+    {
+        path: edit_job, component: EditJobComponent
+    },
+    {
+        path: forgotPassword, component : ForgotPasswordComponent
+    },
+    {
+        path: resetPassword, component : ResetPasswordComponent
     },
     {
         path: error, component: ErrorPageComponent

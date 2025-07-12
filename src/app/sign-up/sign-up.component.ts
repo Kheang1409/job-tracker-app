@@ -1,93 +1,52 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { User } from '../user';
-import { UsersDataService } from '../users-data.service';
-import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../environments/environment.development';
-import { BannerComponent } from '../banner/banner.component';
+import { Router, RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UsersDataService } from '../services/users-data.service';
 
 @Component({
   selector: 'app-sign-up',
-  imports: [ReactiveFormsModule, CommonModule, BannerComponent],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.css'
 })
 export class SignUpComponent {
-  userForm!: FormGroup;
-  user!: User;
+  signUpForm: FormGroup;
+  submitted = false;
+  serverError: string | null = null;
 
-
-  createFailMessage: string = '';
-  isCreateFail: boolean = false;
-
-  home: string = environment.urlFrontend.home;
-
-  constructor(private _formBuilder: FormBuilder, private _usersService: UsersDataService, private _authService: AuthService, private _router: Router) {
-    this.user = new User();
-    this.redirectToHomePageIfLoggedIn();
-  }
-  ngOnInit(): void {
-    this.userForm = this._formBuilder.group(
-      {
-        email: '',
-        username: '',
-        password: '',
-        comfirmPassword: ''
-      }
-    )
+  constructor(
+    private fb: FormBuilder,
+    private _userService: UsersDataService,
+    private _router: Router
+  ) {
+    this.signUpForm = this.fb.group({
+      firstname: ['', Validators.required],
+      lastname: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
   }
 
-  signUp() {
-    if (!this.isMissMatch()) {
-      this.user.fill(this.userForm);
-      this._usersService.createUser(this.user).subscribe(
-        {
-          next: (user) => {
-            this.createFailMessage = '';
-            this.isCreateFail = false;
-          },
-          error: (error) => {
-            this.createFailMessage = error.message;
-            this.isCreateFail = true;
-          },
-          complete: () => {
-            if (!this.isCreateFail) {
-              this.loginToken(this.user)
-            }
-          }
-        }
-      )
-    }
-  }
-  loginToken(user: User) {
-    this._usersService.getToken(user).subscribe(
-      {
-        next: (token) => {
-          this._authService.setToken(token);
+  onSubmit(): void {
+    this.submitted = true;
+    this.serverError = null;
+
+    if (this.signUpForm.valid) {
+      this._userService.createUser(this.signUpForm.value).subscribe({
+        next: (response) => {
+          // console.log('User created successfully:', response);
+          this._router.navigate(['/login']);
+
         },
         error: (error) => {
-          this.createFailMessage = error;
-          this.isCreateFail = true;
-        },
-        complete: () => {
-          this.redirectToHomePageIfLoggedIn();
+          // console.error('Error creating user:', error);
+          this.serverError = error?.error?.message || 'An unexpected error occurred. Please try again.';
         }
-      }
-    )
-  }
-  isMissMatch() {
-    if (this.userForm.value.password !== this.userForm.value.comfirmPassword) {
-      this.createFailMessage = environment.message.passwordMissedMatch;
-      this.isCreateFail = true;
-      return true;
-    }
-    return false;
-  }
-  redirectToHomePageIfLoggedIn() {
-    if (this._authService.isLoggedIn()) {
-      this._router.navigate([this.home]);
+      });
+    } else {
+      this.signUpForm.markAllAsTouched();
     }
   }
 }

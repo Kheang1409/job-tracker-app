@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
-import { TopTechnologiesComponent } from '../top-technologies/top-technologies.component';
-import { RecentJobComponent } from '../recent-job/recent-job.component';
-import { SiteStateComponent } from '../site-state/site-state.component';
-import { BannerComponent } from '../banner/banner.component';
+// import { BannerComponent } from '../banner/banner.component';
+import { SatsComponent } from '../stats/stats.component';
+import { FooterComponent } from '../footer/footer.component';
 
 
 @Component({
   selector: 'app-home',
-  imports: [BannerComponent, TopTechnologiesComponent, RecentJobComponent, SiteStateComponent],
+  imports: [SatsComponent, FooterComponent/*, BannerComponent*/],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  isEmpty: boolean = false;
+  
 }

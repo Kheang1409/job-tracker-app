@@ -1,0 +1,51 @@
+<div class="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+  <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Schedule Next Step</h3>
+
+    <form [formGroup]="nextStepForm" (ngSubmit)="confirmNextStep()" class="flex flex-col pl-0 mb-0 rounded-lg px-3 py-6 sm:px-6 lg:px-8">
+      <div class="space-y-12">
+        <div class="border-b border-gray-900/10 pb-12">
+          <h2 class="text-base font-semibold text-gray-900">Appointment Details</h2>
+
+          <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <!-- Next Stage Number -->
+            <div class="sm:col-span-6">
+              <label for="name" class="block text-sm font-medium text-gray-900">New Stage</label>
+              <div class="mt-2">
+                <input type="text" id="name" formControlName="name"
+                  class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" />
+                <div *ngIf="nextStepForm.get('name')?.invalid && nextStepForm.get('name')?.touched" class="text-red-600 text-sm mt-1">
+                  <span *ngIf="nextStepForm.get('name')?.errors?.['required']">New stage is required.</span>
+                  <span *ngIf="nextStepForm.get('name')?.errors?.['pattern']">Please enter a valid number.</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Appointment Date -->
+            <div class="sm:col-span-6">
+              <label for="appointment-date" class="block text-sm font-medium text-gray-900">Appointment Date</label>
+              <div class="mt-2">
+                <input type="date" id="appointment-date" formControlName="appointmentDate"
+                  class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm" />
+                <div *ngIf="nextStepForm.get('appointmentDate')?.invalid && nextStepForm.get('appointmentDate')?.touched" class="text-red-600 text-sm mt-1">
+                  <span *ngIf="nextStepForm.get('appointmentDate')?.errors?.['required']">Appointment date is required.</span>
+                  <span *ngIf="nextStepForm.get('appointmentDate')?.errors?.['invalidDate']">{{ nextStepForm.get('appointmentDate')?.errors?.['invalidDate'] }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Submit Button (inside the form now) -->
+          <div class="mt-6 flex items-center justify-end gap-x-6">
+            <button type="button" class="text-sm font-semibold text-gray-900" (click)="cancel()">Cancel</button>
+            <button type="submit" [disabled]="!nextStepForm.valid"
+              class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+          </div>
+
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>

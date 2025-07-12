@@ -1,95 +1,177 @@
-import { Component } from '@angular/core';
-import { AuthService } from '../auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../environments/environment.development';
-import { FormsModule } from '@angular/forms';
-import { Job } from '../job';
-import { JobsDataService } from '../jobs-data.service';
-import { BannerComponent } from '../banner/banner.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl, ValidationErrors, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { JobsDataService } from '../services/jobs-data.service';
+import { AuthService } from '../services/auth.service';
+import { addSkillToList, removeSkillFromList } from '../untils/skills-utils';
+import { dateToISODateString } from '../untils/date-format-utils';
 
 @Component({
   selector: 'app-edit-job',
-  imports: [FormsModule, CommonModule, BannerComponent],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './edit-job.component.html',
-  styleUrl: './edit-job.component.css'
+  styleUrls: ['./edit-job.component.css']
 })
-export class EditJobComponent {
+export class EditJobComponent implements OnInit {
 
-  activeTab: number = 1;
+  jobForm: FormGroup;
+  activeTab = 1;
+  jobId: string | null = null;
 
-  jobId!: string;
-  job: Job = new Job();
+  skillInput = '';
+  skillsList: { name: string }[] = [];
+  
+  todayDate: string = '';
 
-  isError: boolean = false;
-  errorMessage: string = ''
+  serverError: string | null = null;
 
-  skillsString: string = ''
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private _router: Router,
+    private _jobService: JobsDataService,
+    private _authService: AuthService
+  ) {
+    const today = new Date();
 
-  home: string = environment.urlFrontend.home;
-
-  constructor(private _authService: AuthService, private _jobsService: JobsDataService, private _router: Router, private _activatedRouter: ActivatedRoute) {
-
+    this.jobForm = this.fb.group({
+      title: ['', [Validators.required, Validators.maxLength(100)]],
+      companyName: ['', [Validators.required, Validators.maxLength(100)]],
+      workMode: ['', [Validators.required]],
+      employmentType: ['', [Validators.required]],
+      numberOfOpenings: [1, [Validators.required, Validators.min(1), Validators.max(20)]],
+      minExperience: [0, [Validators.min(0), Validators.max(20)]],
+      requiredSkills: [[], [this.arrayRequiredValidator()]],
+      jobDescription: ['', [Validators.required]],
+      minSalary: [0, [Validators.min(0)]],
+      maxSalary: [0, [Validators.min(0)]],
+      currency: ['', [Validators.required]],
+      street: ['', [Validators.required]],
+      postalCode: ['', [Validators.required]],
+      city: ['', [Validators.required]],
+      state: ['', [Validators.required]],
+      country: ['', [Validators.required]],
+      expirationDate: ['', [Validators.required, this.expirationDateValidator]]
+    });
   }
+
   ngOnInit(): void {
-    this.onAuthorized();
-    this.getJob();
+    if (!this._authService.isLoggedIn()) {
+      this._router.navigate(['/login'], {
+        queryParams: { returnUrl: this._router.url }
+      });
+      return;
+    }
+
+    this.jobId = this.route.snapshot.paramMap.get('id');
+    if (this.jobId) {
+      this.loadJobData(this.jobId);
+    }
   }
 
-
-  getJob() {
-    this.jobId = this._activatedRouter.snapshot.params[environment.params.jobId];
-    this._jobsService.getJob(this.jobId).subscribe({
+  loadJobData(id: string) {
+    this._jobService.getJob(id).subscribe({
       next: (job) => {
-        this.job = Object.assign(new Job(), job);
-        this.skillsString = this.job.arraySkillsToString();
-        console.log(job)
+        this.skillsList = job.requirementSkills || [];
+        this.jobForm.patchValue({
+          title: job.title,
+          companyName: job.companyName,
+          workMode: job.workMode,
+          employmentType: job.employmentType,
+          numberOfOpenings: job.numberOfOpenings,
+          minExperience: job.minExperience,
+          requiredSkills: this.skillsList,
+          jobDescription: job.jobDescription,
+          minSalary: job.salary?.minSalary || 0,
+          maxSalary: job.salary?.maxSalary || 0,
+          currency: job.salary?.currency || '',
+          street: job.jobLocation?.street || '',
+          postalCode: job.jobLocation?.postalCode || '',
+          city: job.jobLocation?.city || '',
+          state: job.jobLocation?.state || '',
+          country: job.jobLocation?.country || '',
+          expirationDate: dateToISODateString(job.expirationDate) || '',
+        });
+
+      this.todayDate = dateToISODateString(job.createdAt);
+
       },
       error: (error) => {
-        this.isError = true;
-        this.errorMessage = error.message;
-        console.log(error.message);
-      },
-      complete: () => {
-      }
-    })
-  }
-
-  update(): void {
-    this.onAuthorized();
-    this.job.stringSkillsToArray(this.skillsString)
-    this._jobsService.updateJob(this.jobId, this.job).subscribe({
-      next: (job) => {
-        console.log(job);
-      },
-      error: (error) => {
-        this.isError = true;
-        this.errorMessage = error.message;
-        console.log(error.message);
-      },
-      complete: () => {
-        this._router.navigate([this.home]);
+        // console.error(error);
+        this.serverError = error?.error?.message || 'An unexpected error occurred. Please try again.';
       }
     });
   }
 
-  previouse() {
-    this.activeTab--;
-    this.setActiveTab(this.activeTab);
+  onInputChange(controlName: string, event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = Number(input.value);
+
+    const control = this.jobForm.get(controlName);
+    if (!control) return;
+
+    const min = input.min ? Number(input.min) : Number.NEGATIVE_INFINITY;
+    const max = input.max ? Number(input.max) : Number.POSITIVE_INFINITY;
+
+    if (value < min) value = min;
+    if (value > max) value = max;
+
+    control.setValue(value);
   }
 
-  next() {
-    this.activeTab++;
-    this.setActiveTab(this.activeTab);
-  }
-
-  setActiveTab(activeTab: number) {
-    this.activeTab = activeTab;
-  }
-
-  onAuthorized() {
-    if (!this._authService.isLoggedIn()) {
-      this._router.navigate([environment.urlFrontend.signIn]);
+  submit(): void {
+    if (this.jobForm.valid && this.jobId) {
+      this._jobService.updateJob(this.jobId, this.jobForm.value).subscribe({
+        next: () => this._router.navigate([`/job/${this.jobId}`]),
+        error: (error) => {
+          console.error(error);
+          this.serverError = error?.error?.message || 'An unexpected error occurred. Please try again.';
+        }
+      });
+    } else {
+      this.jobForm.markAllAsTouched();
     }
+  }
+
+  arrayRequiredValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const val = control.value;
+      if (Array.isArray(val) && val.length > 0) {
+        return null;
+      }
+      return { required: true };
+    };
+  }
+  
+  expirationDateValidator(control: any) {
+    const currentDate = new Date();
+    const selectedDate = new Date(control.value);
+    if (selectedDate < currentDate) {
+      return { invalidDate: true };
+    }
+    return null;
+  }
+
+  addSkill(event: Event): void {
+    event.preventDefault();
+    addSkillToList(this.skillInput, this.skillsList, (updatedSkills) => {
+      this.skillsList = updatedSkills;
+      this.jobForm.get('requiredSkills')?.setValue(this.skillsList);
+    }, (updatedSkills) => {
+      this.jobForm.get('requiredSkills')?.setValue(updatedSkills);
+    });
+    this.skillInput = '';
+  }
+
+  removeSkill(skillName: string): void {
+    removeSkillFromList(skillName, this.skillsList, (updatedSkills) => {
+      this.skillsList = updatedSkills;
+      this.jobForm.get('requiredSkills')?.setValue(this.skillsList);
+    }, (updatedSkills) => {
+      this.jobForm.get('requiredSkills')?.setValue(updatedSkills);
+    });
+    console.log(this.skillsList);
   }
 }
